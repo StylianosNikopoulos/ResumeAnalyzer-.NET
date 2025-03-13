@@ -407,3 +407,4 @@ AuthService/appsettings.json
 *.json
 UserService/appsettings.json
 UserService/appsettings.Development.json
+ResumeUploadService/appsettings.json
