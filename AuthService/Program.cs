@@ -4,15 +4,19 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 
+
+
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+
+var connectionString = builder.Configuration.GetConnectionString("AuthServiceConnection");
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
 builder.Services.AddDbContext<AuthServiceDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("AuthServiceConnection"),
-    Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.3.0-mysql")));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 
 var app = builder.Build();
