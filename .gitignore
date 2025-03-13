@@ -405,3 +405,4 @@ ASALocalRun/
 .localhistory/
 AuthService/appsettings.json
 *.json
+UserService/appsettings.json
