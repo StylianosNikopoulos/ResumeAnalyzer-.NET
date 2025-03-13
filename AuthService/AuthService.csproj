@@ -30,4 +30,7 @@
     <Folder Include="Enum\" />
     <Folder Include="LoginRequest\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="appsettings.Development.json" />
+  </ItemGroup>
 </Project>

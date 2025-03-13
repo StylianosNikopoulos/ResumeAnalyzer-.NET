@@ -40,7 +40,7 @@
     "AuthService": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:48313;http://localhost:55623",
+      "applicationUrl": "https://localhost:20502;http://localhost:20304",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
