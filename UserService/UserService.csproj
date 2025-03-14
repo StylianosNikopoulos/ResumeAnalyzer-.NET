@@ -35,5 +35,8 @@
     <ProjectReference Include="..\ResumeUploadService\ResumeUploadService.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\AuthService\AuthService.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>
