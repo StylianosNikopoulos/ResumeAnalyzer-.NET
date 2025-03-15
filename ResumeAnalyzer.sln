@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResumeAnalyzerService", "Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService", "AuthService\AuthService.csproj", "{FEC7130D-9B63-4AE7-B633-1E8EFF089587}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResumeAnalyzerMVC", "ResumeAnalyzerMVC\ResumeAnalyzerMVC.csproj", "{78E625F3-784B-4033-8988-B5DF3C2DFCDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FEC7130D-9B63-4AE7-B633-1E8EFF089587}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEC7130D-9B63-4AE7-B633-1E8EFF089587}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEC7130D-9B63-4AE7-B633-1E8EFF089587}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78E625F3-784B-4033-8988-B5DF3C2DFCDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E625F3-784B-4033-8988-B5DF3C2DFCDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78E625F3-784B-4033-8988-B5DF3C2DFCDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78E625F3-784B-4033-8988-B5DF3C2DFCDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
