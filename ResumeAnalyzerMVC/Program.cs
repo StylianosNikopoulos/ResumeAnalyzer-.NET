@@ -1,7 +1,14 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using ResumeAnalyzerMVC.Services;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession(); 
+builder.Services.AddScoped<ApiService>();
+
+builder.Services.AddHttpClient<ApiService>();
+
 
 var app = builder.Build();
 
@@ -18,6 +25,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(

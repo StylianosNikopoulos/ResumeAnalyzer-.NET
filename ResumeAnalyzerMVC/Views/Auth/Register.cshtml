@@ -11,6 +11,10 @@
 
 <form asp-controller="Auth" asp-action="Register" method="post">
     <div class="form-group">
+        <label>Name:</label>
+        <input type="name" name="name" class="form-control" required />
+    </div>
+    <div class="form-group">
         <label>Email:</label>
         <input type="email" name="email" class="form-control" required />
     </div>
