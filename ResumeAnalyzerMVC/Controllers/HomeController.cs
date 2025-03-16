@@ -15,8 +15,8 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        //var isLoggedIn = HttpContext.Session.GetString("UserToken") != null;
-        //ViewBag.IsLoggedIn = isLoggedIn;
+        var isLoggedIn = HttpContext.Session.GetString("UserToken") != null;
+        ViewBag.IsLoggedIn = isLoggedIn;
         return View();
     }
 
