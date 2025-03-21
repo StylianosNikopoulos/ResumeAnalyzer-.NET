@@ -6,9 +6,9 @@ namespace AuthService.Models;
 
 public partial class AuthServiceDbContext : DbContext
 {
-    public AuthServiceDbContext()
-    {
-    }
+    //public AuthServiceDbContext()
+    //{
+    //}
 
     public AuthServiceDbContext(DbContextOptions<AuthServiceDbContext> options)
         : base(options)

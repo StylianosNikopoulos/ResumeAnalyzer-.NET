@@ -1,3 +1,4 @@
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -17,16 +18,17 @@ namespace AuthService.Controllers
     {
         private readonly AuthServiceDbContext _context;
         private readonly IConfiguration _configuration;
-
+        private readonly string _secretKey;
         public AuthController(AuthServiceDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
+            _secretKey = _configuration["JwtSettings:SecretKey"];
         }
 
         // Registration Endpoint
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] User userRegister)
+        public async Task<IActionResult> Register([FromForm] User userRegister)
         {
             if (userRegister == null)
             {
@@ -68,7 +70,7 @@ namespace AuthService.Controllers
 
         // Login Endpoint
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginRequest userLoginRequest)
+        public async Task<IActionResult> Login([FromForm] UserLoginRequest userLoginRequest)
         {
             if (userLoginRequest == null || string.IsNullOrEmpty(userLoginRequest.Email) || string.IsNullOrEmpty(userLoginRequest.Password))
             {
@@ -95,16 +97,20 @@ namespace AuthService.Controllers
 
         private string GenerateJwtToken(User user)
         {
+            if (string.IsNullOrEmpty(_secretKey))
+            {
+                throw new ArgumentNullException("JwtSettings:SecretKey", "Secret key is not configured in appsettings.json.");
+            }
+
             var tokenHandler = new JwtSecurityTokenHandler();
-            var secretKey = _configuration["JwtSettings:SecretKey"];
-            var key = Encoding.ASCII.GetBytes(secretKey);
+            var key = Encoding.ASCII.GetBytes(_secretKey);  // Convert the secret key to bytes
 
             var claims = new[]
             {
-                new Claim("id", user.Id.ToString()),
-                new Claim("email", user.Email),
-                new Claim("role", user.Role.RoleName) 
-            };
+            new Claim("id", user.Id.ToString()),
+            new Claim("email", user.Email),
+            new Claim("role", user.Role.RoleName)
+        };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -112,8 +118,9 @@ namespace AuthService.Controllers
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return tokenHandler.WriteToken(token);  // Return the generated token
         }
 
         private bool VerifyPassword(string enteredPassword, string storedPasswordHash)

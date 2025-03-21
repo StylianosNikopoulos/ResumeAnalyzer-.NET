@@ -1,5 +1,18 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿//async function login() {
+//        const email = document.getElementById("email").value;
+//    const password = document.getElementById("password").value;
 
-// Write your JavaScript code.
+//    const response = await fetch("/Auth/login", {
+//        method: "POST",
+//    headers: {
+//        "Content-Type": "application/json"
+//            },
+//    body: JSON.stringify({email, password})
+//        });
 
+//    if (response.ok) {
+//        window.location.href = "/";
+//        } else {
+//        alert("Login failed. Please check your credentials.");
+//        }
+//    }

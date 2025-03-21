@@ -2,20 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AuthService.LoginRequest;
+using AuthService.Models;
 using Microsoft.AspNetCore.Mvc;
 using ResumeAnalyzerMVC.Services;
-
 namespace ResumeAnalyzerMVC.Controllers
 {
     public class AuthController : Controller
     {
         private readonly ApiService _apiService;
         private readonly string _authServiceUrl;
+        private readonly AuthServiceDbContext _context;
 
-        public AuthController(ApiService apiService, IConfiguration config)
+        public AuthController(ApiService apiService, IConfiguration config, AuthServiceDbContext context)  // Inject it
         {
             _apiService = apiService;
             _authServiceUrl = config["ApiUrls:AuthService"];
+            _context = context;
         }
 
         public IActionResult Login()
@@ -48,10 +51,11 @@ namespace ResumeAnalyzerMVC.Controllers
             return RedirectToAction("Login");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromForm] UserLoginRequest userLoginRequest)
         {
-            var response = await _apiService.PostAsync($"{_authServiceUrl}/login", new { Email = email, Password = password });
+
+            var response = await _apiService.PostAsync($"{_authServiceUrl}/login", new { Email = userLoginRequest.Email, Password = userLoginRequest.Password});
 
             if (response.Contains("Unauthorized"))
             {

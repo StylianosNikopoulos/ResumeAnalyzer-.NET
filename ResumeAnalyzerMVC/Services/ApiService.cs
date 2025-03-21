@@ -13,14 +13,30 @@ namespace ResumeAnalyzerMVC.Services
             _httpClient = httpClient;
         }
 
-        public async Task<string> PostAsync(string url, object data)
+        public async Task<string> PostAsync<T>(string url, T data)
         {
-            var jsonData = JsonSerializer.Serialize(data);
-            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(url, content);
+            try
+            {
+                var json = JsonSerializer.Serialize(data);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            return await response.Content.ReadAsStringAsync();
+                var response = await _httpClient.PostAsync(url, content);
+
+                var result = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception($"Error: {response.StatusCode}, Message: {result}");
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while making the POST request.", ex);
+            }
         }
+
     }
 }
 
