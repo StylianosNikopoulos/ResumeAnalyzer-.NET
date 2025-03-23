@@ -93,6 +93,8 @@ namespace AuthService.Controllers
 
             var token = GenerateJwtToken(user);
             return Ok(new { Token = token });
+            //return RedirectToAction("Index", "Home");
+
         }
 
         private string GenerateJwtToken(User user)

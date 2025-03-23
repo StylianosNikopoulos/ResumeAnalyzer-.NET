@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AuthService.LoginRequest;
 using AuthService.Models;
@@ -14,7 +15,7 @@ namespace ResumeAnalyzerMVC.Controllers
         private readonly string _authServiceUrl;
         private readonly AuthServiceDbContext _context;
 
-        public AuthController(ApiService apiService, IConfiguration config, AuthServiceDbContext context)  // Inject it
+        public AuthController(ApiService apiService, IConfiguration config, AuthServiceDbContext context)  
         {
             _apiService = apiService;
             _authServiceUrl = config["ApiUrls:AuthService"];
@@ -51,20 +52,31 @@ namespace ResumeAnalyzerMVC.Controllers
             return RedirectToAction("Login");
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromForm] UserLoginRequest userLoginRequest)
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLoginRequest model)
         {
-
-            var response = await _apiService.PostAsync($"{_authServiceUrl}/login", new { Email = userLoginRequest.Email, Password = userLoginRequest.Password});
-
-            if (response.Contains("Unauthorized"))
+            if (!ModelState.IsValid)
             {
-                ViewData["ErrorMessage"] = "Invalid credentials!";
-                return View();
+                var response = await _apiService.PostAsync($"{_authServiceUrl}/login", model);
+
+                var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(response);
+
+                if (tokenResponse == null || string.IsNullOrEmpty(tokenResponse.Token))
+                {
+                    ViewData["ErrorMessage"] = "Invalid credentials!";
+                    return View("LoginView");
+                }
+
+                HttpContext.Session.SetString("UserToken", tokenResponse.Token);
+
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View("Login", model);
+
             }
 
-            HttpContext.Session.SetString("UserToken", response);
-            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Logout()
