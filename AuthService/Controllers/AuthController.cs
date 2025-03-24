@@ -26,7 +26,7 @@ namespace AuthService.Controllers
             _secretKey = _configuration["JwtSettings:SecretKey"];
         }
 
-        // Registration Endpoint
+        // Register Endpoint
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromForm] User userRegister)
         {
