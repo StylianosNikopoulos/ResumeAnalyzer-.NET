@@ -1,23 +1,24 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
+# Use base ASP.NET runtime
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-
+# Build Stage
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["ResumeUploadService/ResumeUploadService.csproj", "ResumeUploadService/"]
-RUN dotnet restore "ResumeUploadService/ResumeUploadService.csproj"
+COPY ["AuthService/AuthService.csproj", "AuthService/"]
+RUN dotnet restore "AuthService/AuthService.csproj"
 COPY . .
-WORKDIR "/src/ResumeUploadService"
-RUN dotnet build "ResumeUploadService.csproj" -c Release -o /app/build
+WORKDIR "/src/AuthService"
+RUN dotnet build "AuthService.csproj" -c Release -o /app/build
 
+# Publish Stage
 FROM build AS publish
-RUN dotnet publish "ResumeUploadService.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "AuthService.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
+# Final Stage
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ResumeUploadService.dll"]
+ENTRYPOINT ["dotnet", "AuthService.dll"]

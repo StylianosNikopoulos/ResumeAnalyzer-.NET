@@ -409,3 +409,4 @@ UserService/appsettings.json
 UserService/appsettings.Development.json
 ResumeUploadService/appsettings.json
 docker-compose.yml
+.env
