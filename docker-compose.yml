@@ -1,0 +1,131 @@
+version: '3.8'
+
+services:
+  authservice:
+    image: ${DOCKER_REGISTRY-}authservice
+    build:
+      context: .
+      dockerfile: AuthService/Dockerfile
+    depends_on:
+      - db1
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__DefaultConnection=Server=db1;Database=${AUTH_DB};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+      - DOTNET_USE_POLLING_FILE_WATCHER=1  
+      - ASPNETCORE_URLS=http://+:5000
+    ports:
+      - "5013:5000"
+      - "5009:5009"
+    networks:
+      - app-network
+
+  resumeanalyzermvc:
+    image: ${DOCKER_REGISTRY-}resumeanalyzermvc
+    build:
+      context: .
+      dockerfile: ResumeAnalyzerMVC/Dockerfile
+    depends_on:
+      - db1
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__DefaultConnection=Server=db1;Database=${RESUME_DB};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - ASPNETCORE_URLS=http://+:5000
+    ports:
+      - "5014:5000"
+      - "5010:5010"
+    networks:
+      - app-network
+
+  resumeuploadservice:
+    image: ${DOCKER_REGISTRY-}resumeuploadservice
+    build:
+      context: .
+      dockerfile: ResumeUploadService/Dockerfile
+    depends_on:
+      - db2
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__DefaultConnection=Server=db2;Database=${UPLOAD_DB};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - ASPNETCORE_URLS=http://+:5000
+    ports:
+      - "5015:5000"
+      - "5011:5011"
+    networks:
+      - app-network
+
+  userservice:
+    image: ${DOCKER_REGISTRY-}userservice
+    build:
+      context: .
+      dockerfile: UserService/Dockerfile
+    depends_on:
+      - db3
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__DefaultConnection=Server=db3;Database=${USER_DB};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - ASPNETCORE_URLS=http://+:5000
+    ports:
+      - "5016:5000"
+      - "5012:5012"
+    networks:
+      - app-network
+
+  db1:
+    image: mysql:8.0
+    container_name: mysql_db1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${AUTH_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data1:/var/lib/mysql
+    networks:
+      - app-network
+
+  db2:
+    image: mysql:8.0
+    container_name: mysql_db2
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${RESUME_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-data2:/var/lib/mysql
+    networks:
+      - app-network
+
+  db3:
+    image: mysql:8.0
+    container_name: mysql_db3
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${USER_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql-data3:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  mysql-data1:
+  mysql-data2:
+  mysql-data3:
+
+networks:
+  app-network:
+    driver: bridge
