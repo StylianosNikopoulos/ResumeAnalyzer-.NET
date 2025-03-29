@@ -9,7 +9,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 
 // Register DbContext in MVC
-var connectionString = builder.Configuration.GetConnectionString("AuthServiceConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AuthServiceDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 

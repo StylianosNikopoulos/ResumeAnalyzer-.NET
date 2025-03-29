@@ -29,9 +29,8 @@
     <ProjectReference Include="..\AuthService\AuthService.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\docker-compose.dcproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
+    <ProjectReference Include="..\UserService\UserService.csproj" />
+    <ProjectReference Include="..\ResumeUploadService\ResumeUploadService.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="appsettings.Development.json" />

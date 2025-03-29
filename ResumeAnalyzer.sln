@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService", "AuthService\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResumeAnalyzerMVC", "ResumeAnalyzerMVC\ResumeAnalyzerMVC.csproj", "{78E625F3-784B-4033-8988-B5DF3C2DFCDE}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{9BE357AE-517A-41CB-B897-20F43951CE20}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{78E625F3-784B-4033-8988-B5DF3C2DFCDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78E625F3-784B-4033-8988-B5DF3C2DFCDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78E625F3-784B-4033-8988-B5DF3C2DFCDE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BE357AE-517A-41CB-B897-20F43951CE20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BE357AE-517A-41CB-B897-20F43951CE20}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BE357AE-517A-41CB-B897-20F43951CE20}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BE357AE-517A-41CB-B897-20F43951CE20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

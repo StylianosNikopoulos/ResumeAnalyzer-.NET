@@ -11,6 +11,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ConnectionStrings__DefaultConnection=Server=db1;Database=${AUTH_DB};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+      - JWTSettings__SecretKey=${JWT_SECRET}
       - DOTNET_USE_POLLING_FILE_WATCHER=1  
       - ASPNETCORE_URLS=http://+:5000
     ports:
@@ -28,7 +29,8 @@ services:
       - db1
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
-      - ConnectionStrings__DefaultConnection=Server=db1;Database=${RESUME_DB};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+      - ConnectionStrings__DefaultConnection=Server=db1;Database=${AUTH_DB};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+      - JWTSettings__SecretKey=${JWT_SECRET}
       - DOTNET_USE_POLLING_FILE_WATCHER=1
       - ASPNETCORE_URLS=http://+:5000
     ports:
