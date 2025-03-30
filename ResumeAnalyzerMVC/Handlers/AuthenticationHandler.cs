@@ -16,11 +16,7 @@ namespace ResumeAnalyzerMVC.Handlers
 		{
 			_httpClient = httpClient;
             _configuration = configuration;
-            _authServiceUrl = _configuration["AUTH_SERVICE_URL"] ?? "http://localhost:5013/api/auth"; // Default fallback URL;
-
-
-            //_authServiceUrl = _configuration["AUTH_SERVICE_URL"] ?? Environment.GetEnvironmentVariable("AUTH_SERVICE_URL");
-
+            _authServiceUrl = _configuration["AUTH_SERVICE_URL"] ?? "http://localhost:5013/api/auth"; 
         }
 
         public async Task<(bool success,string message)> RegisterAsync(string name,string email,string password)
@@ -29,8 +25,7 @@ namespace ResumeAnalyzerMVC.Handlers
 			{
 				Name = name,
 				Email = email,
-                PasswordHash = password,  // Hash the password before sending
-                Role = "User"
+                PasswordHash = HashPassword(password),
             };
 
             var jsonContent = new StringContent(JsonSerializer.Serialize(regModel), Encoding.UTF8, "application/json");
@@ -68,7 +63,7 @@ namespace ResumeAnalyzerMVC.Handlers
             var loginModel = new
             {
                 Email = email,
-                Password = password,  // Hash the password before sending
+                Password = password,  
             };
             var jsonContent = new StringContent(JsonSerializer.Serialize(loginModel), Encoding.UTF8, "application/json");
 
@@ -92,8 +87,6 @@ namespace ResumeAnalyzerMVC.Handlers
                 {
                     return (false, null, "Invalid credentials");
                 }
-
-
             }
             catch (Exception ex)
             {

@@ -23,7 +23,6 @@ namespace AuthService.Controllers
         {
             _context = context;
             _configuration = configuration;
-            //_secretKey = "V4X9ed4Jj74yG3B6SLquDsOmTRlxZqv6beO7OH3JW2Q=";
             _secretKey = _configuration["JWT_SECRET"];
         }
 
@@ -35,6 +34,9 @@ namespace AuthService.Controllers
             {
                 return BadRequest("Invalid user data");
             }
+            //var role = Enum.TryParse<RolesEnum>(userRegister.Role, true, out var parsedRole)
+            //    ? parsedRole
+            //    : RolesEnum.User;
 
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == userRegister.Email);
