@@ -23,12 +23,13 @@ namespace AuthService.Controllers
         {
             _context = context;
             _configuration = configuration;
-            _secretKey = _configuration["JwtSettings:SecretKey"];
+            //_secretKey = "V4X9ed4Jj74yG3B6SLquDsOmTRlxZqv6beO7OH3JW2Q=";
+            _secretKey = _configuration["JWT_SECRET"];
         }
 
         // Register Endpoint
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] User userRegister)
+        public async Task<IActionResult> Register([FromBody] UserRegisterRequest userRegister)
         {
             if (userRegister == null)
             {
@@ -70,32 +71,31 @@ namespace AuthService.Controllers
 
         // Login Endpoint
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromForm] UserLoginRequest userLoginRequest)
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest userLoginRequest)
         {
             if (userLoginRequest == null || string.IsNullOrEmpty(userLoginRequest.Email) || string.IsNullOrEmpty(userLoginRequest.Password))
             {
-                return BadRequest("Invalid login credentials");
+                return BadRequest(new { status = "error", message = "Invalid login credentials" });
             }
 
             var user = await _context.Users
-                .Include(u => u.Role)  
+                .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Email == userLoginRequest.Email);
 
             if (user == null)
             {
-                return Unauthorized("User not found");
+                return Unauthorized(new { status = "error", message = "User not found" });
             }
 
             if (!VerifyPassword(userLoginRequest.Password, user.PasswordHash))
             {
-                return Unauthorized("Incorrect password.");
+                return Unauthorized(new { status = "error", message = "Incorrect password" });
             }
 
             var token = GenerateJwtToken(user);
-            return Ok(new { Token = token });
-            //return RedirectToAction("Index", "Home");
-
+            return Ok(new { status = "success", token = token });
         }
+
 
         private string GenerateJwtToken(User user)
         {

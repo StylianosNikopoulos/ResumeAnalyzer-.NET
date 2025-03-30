@@ -14,16 +14,20 @@
     <None Remove="Views\Resume\" />
     <None Remove="Views\HR\" />
     <None Remove="Services\" />
+    <None Remove="Handlers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Resume\" />
     <Folder Include="Views\HR\" />
     <Folder Include="Services\" />
+    <Folder Include="Handlers\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
     <PackageReference Include="Docker.DotNet" Version="3.125.15" />
+    <PackageReference Include="dotenv.net" Version="3.2.1" />
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AuthService\AuthService.csproj">

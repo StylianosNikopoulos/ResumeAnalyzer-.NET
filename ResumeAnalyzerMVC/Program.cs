@@ -1,17 +1,42 @@
 ﻿using AuthService.Models;  // Add this!
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.EntityFrameworkCore;
+using ResumeAnalyzerMVC.Handlers;
 using ResumeAnalyzerMVC.Services;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
+Env.Load();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient<AuthenticationHandler>();
+
 builder.Services.AddSession();
 
-// Register DbContext in MVC
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+Env.Load();
+
+// Manually construct the connection string from .env variables
+var connectionString = $"Server={Environment.GetEnvironmentVariable("DB_HOST")};" +
+                       $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
+                       $"Database={Environment.GetEnvironmentVariable("DB_DATABASE")};" +
+                       $"User={Environment.GetEnvironmentVariable("DB_USERNAME")};" +
+                       $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};";
+
+// Register services
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<AuthServiceDbContext>();
+
+// Register MySQL DbContext
 builder.Services.AddDbContext<AuthServiceDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+// Register DbContext in MVC
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//builder.Services.AddDbContext<AuthServiceDbContext>(options =>
+//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 // Register API service
 builder.Services.AddScoped<ApiService>();
