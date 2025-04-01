@@ -90,7 +90,7 @@ namespace ResumeAnalyzerMVC.Handlers
             }
             catch (Exception ex)
             {
-                return (false, null, "Please try again later.");
+                return (false, null, "Please try again later");
             }
         }
 
