@@ -1,9 +1,67 @@
-﻿<h1>Welcome to Our Software Company!</h1>
-@if (ViewBag.IsLoggedIn)
-{
-    <a href="/Resume/Apply"><button>Apply Now</button></a>
-}
-else
-{
-    <a href="/Authentication/Login"><button>Login to Apply</button></a>
-}
+﻿@*<h1>Welcome to Our Software Company!</h1>
+    @if (ViewBag.IsLoggedIn)
+    {
+        <a href="/Resume/Apply"><button>Apply Now</button></a>
+    }
+    else
+    {
+        <a href="/Authentication/Login"><button>Login to Apply</button></a>
+    }*@
+
+
+<section id="home" class="hero">
+    <h1>Your Future, Powered by Technology</h1>
+    <p>We provide innovative software solutions tailored to your business needs.</p>
+    <a href="#contact" class="btn btn-primary">Get In Touch</a>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="services">
+    <h2>Our Services</h2>
+    <div class="service-cards">
+        <div class="service-card">
+            <h3>Custom Software Development</h3>
+            <p>Build tailored software solutions that meet your specific business goals.</p>
+        </div>
+        <div class="service-card">
+            <h3>Cloud Solutions</h3>
+            <p>Leverage the power of the cloud for seamless and scalable operations.</p>
+        </div>
+        <div class="service-card">
+            <h3>Mobile App Development</h3>
+            <p>Deliver engaging mobile experiences for your users on iOS and Android.</p>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="about">
+    <h2>About Us</h2>
+    <p>We are a leading software development company providing top-notch services to clients across various industries. Our team of experts is dedicated to delivering innovative and effective solutions to enhance your business.</p>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="testimonials">
+    <h2>What Our Clients Say</h2>
+    <div class="testimonial-cards">
+        <div class="testimonial-card">
+            <p>"TechX Solutions transformed our operations with their custom software. Our productivity has increased by over 40%!"</p>
+            <p>- John Doe, CEO of ABC Corp</p>
+        </div>
+        <div class="testimonial-card">
+            <p>"We are extremely happy with the mobile app TechX developed for us. It has brought in a significant number of new users."</p>
+            <p>- Jane Smith, Product Manager at XYZ Ltd.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact">
+    <h2>Contact Us</h2>
+    <form action="#" method="POST" class="contact-form">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+    </form>
+</section>
