@@ -34,10 +34,6 @@ namespace AuthService.Controllers
             {
                 return BadRequest("Invalid user data");
             }
-            //var role = Enum.TryParse<RolesEnum>(userRegister.Role, true, out var parsedRole)
-            //    ? parsedRole
-            //    : RolesEnum.User;
-
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == userRegister.Email);
 
@@ -68,7 +64,8 @@ namespace AuthService.Controllers
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "User registered successfully" });
+            var token = GenerateJwtToken(newUser);
+            return Ok(new { status = "Success",token = token });
         }
 
         // Login Endpoint

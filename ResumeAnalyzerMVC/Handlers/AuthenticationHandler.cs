@@ -3,6 +3,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using AuthService.Enum;
+using AuthService.LoginRequest;
+using ResumeAnalyzerMVC.Shared;
 
 namespace ResumeAnalyzerMVC.Handlers
 {
@@ -19,7 +21,7 @@ namespace ResumeAnalyzerMVC.Handlers
             _authServiceUrl = _configuration["AUTH_SERVICE_URL"] ?? "http://localhost:5013/api/auth"; 
         }
 
-        public async Task<(bool success,string message)> RegisterAsync(string name,string email,string password)
+        public async Task<(bool success,string token,string message)> RegisterAsync(string name,string email,string password)
 		{
 			var regModel = new
 			{
@@ -37,24 +39,25 @@ namespace ResumeAnalyzerMVC.Handlers
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return (false, responseContent);
+                    return (false,null,"Please put correct pass or name");
                 }
 
                 var apiResponse = JsonSerializer.Deserialize<ApiResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                //var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (apiResponse?.Status == "Success")
+                if (apiResponse != null && !string.IsNullOrEmpty(apiResponse.Token))
                 {
-                    return (true, "User registered successfully");
+                    return (true, apiResponse.Token, "User registered successfully");
                 }
                 else
                 {
-                    return (false, apiResponse?.Message ?? "error");
+                    return (false,null, apiResponse?.Message ?? "error");
                 }
 
             }
             catch (Exception ex)
 			{
-                return (false, ex.Message);
+                return (false,null, ex.Message);
             }
         }
 
@@ -103,13 +106,7 @@ namespace ResumeAnalyzerMVC.Handlers
             }
         }
     }
-
-    public class ApiResponse
-    {
-        public string Status { get; set; }
-        public string Message { get; set; }
-    }
-
+    
     public class TokenResponse
     {
         public string Token { get; set; }

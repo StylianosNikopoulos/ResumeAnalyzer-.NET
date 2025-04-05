@@ -8,6 +8,7 @@ using AuthService.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 using ResumeAnalyzerMVC.Handlers;
 using ResumeAnalyzerMVC.Services;
 namespace ResumeAnalyzerMVC.Controllers
@@ -38,14 +39,14 @@ namespace ResumeAnalyzerMVC.Controllers
                 return View();
             }
 
-            var (success, message) = await _authHandler.RegisterAsync(name, email, password);
+            var (success,token, message) = await _authHandler.RegisterAsync(name, email, password);
             if (!success)
             {
                 ViewData["ErrorMessage"] = message;
                 return View();
             }
-
-            return RedirectToAction("Login");
+            HttpContext.Session.SetString("UserToken", token);
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
