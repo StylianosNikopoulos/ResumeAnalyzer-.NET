@@ -12,11 +12,12 @@ var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__De
 // Fallback: Build the connection string manually if not loaded correctly
 if (string.IsNullOrEmpty(connectionString))
 {
-    var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
-    var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "3306";
-    var dbName = Environment.GetEnvironmentVariable("AUTH_DB") ?? "AuthServiceDB";
-    var dbUser = Environment.GetEnvironmentVariable("MYSQL_USER") ?? "ResumeAnalyzer";
-    var dbPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD") ?? "rootpassword";
+    var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+    var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+    var dbName = Environment.GetEnvironmentVariable("AUTH_DB");
+    var dbUser = Environment.GetEnvironmentVariable("MYSQL_USER");
+    var dbPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD");
+
 
     connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};";
 }
@@ -26,18 +27,15 @@ if (string.IsNullOrEmpty(connectionString))
 }
 
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<AuthServiceDbContext>();
-
-
-
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AuthServiceDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<AuthServiceDbContext>();
 
 var app = builder.Build();
 
@@ -53,6 +51,5 @@ app.UseHttpsRedirection();
 app.UseAuthentication();  
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();
 

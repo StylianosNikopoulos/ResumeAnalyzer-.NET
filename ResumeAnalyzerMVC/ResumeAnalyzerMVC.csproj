@@ -15,14 +15,12 @@
     <None Remove="Views\HR\" />
     <None Remove="Services\" />
     <None Remove="Handlers\" />
-    <None Remove="Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Resume\" />
     <Folder Include="Views\HR\" />
     <Folder Include="Services\" />
     <Folder Include="Handlers\" />
-    <Folder Include="Shared\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.12" />

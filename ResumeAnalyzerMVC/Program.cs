@@ -9,11 +9,7 @@ using DotNetEnv;
 var builder = WebApplication.CreateBuilder(args);
 Env.Load();
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient<AuthenticationHandler>();
 
-builder.Services.AddSession();
 
 Env.Load();
 
@@ -24,6 +20,12 @@ var connectionString = $"Server={Environment.GetEnvironmentVariable("DB_HOST")};
                        $"User={Environment.GetEnvironmentVariable("DB_USERNAME")};" +
                        $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};";
 
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient<AuthenticationHandler>();
+
+builder.Services.AddSession();
 // Register services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -51,11 +53,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",

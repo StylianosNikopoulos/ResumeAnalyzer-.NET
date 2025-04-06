@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -60,12 +61,15 @@ namespace AuthService.Controllers
                 RoleId = userRole.Id,  
                 CreatedAt = DateTime.Now
             };
-
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            var token = GenerateJwtToken(newUser);
-            return Ok(new { status = "Success",token = token });
+            var user = await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == userRegister.Email);
+
+            var token = GenerateJwtToken(user);
+            return Ok(new TokenResponse { Status = 201 , Message = "Register success", Token = token });
         }
 
         // Login Endpoint
@@ -92,7 +96,7 @@ namespace AuthService.Controllers
             }
 
             var token = GenerateJwtToken(user);
-            return Ok(new { status = "success", token = token });
+            return Ok(new TokenResponse { Status = 201, Message = "Login success", Token = token });
         }
 
 

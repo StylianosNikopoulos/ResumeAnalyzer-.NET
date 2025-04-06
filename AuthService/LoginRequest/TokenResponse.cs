@@ -1,9 +1,9 @@
 ﻿using System;
-namespace ResumeAnalyzerMVC.Shared
+namespace AuthService.LoginRequest
 {
-    public class ApiResponse
+    public class TokenResponse
     {
-        public string Status { get; set; }
+        public int Status { get; set; }
         public string Message { get; set; }
         public string Token { get; set; }
     }

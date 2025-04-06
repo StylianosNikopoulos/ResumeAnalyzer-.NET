@@ -4,7 +4,6 @@ using System.Text;
 using System.Text.Json;
 using AuthService.Enum;
 using AuthService.LoginRequest;
-using ResumeAnalyzerMVC.Shared;
 
 namespace ResumeAnalyzerMVC.Handlers
 {
@@ -39,26 +38,21 @@ namespace ResumeAnalyzerMVC.Handlers
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return (false,null,"Please put correct pass or name");
+                    return (false,null, "Unable to register");
                 }
 
-                var apiResponse = JsonSerializer.Deserialize<ApiResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                //var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (apiResponse != null && !string.IsNullOrEmpty(apiResponse.Token))
+                if (tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.Token))
                 {
-                    return (true, apiResponse.Token, "User registered successfully");
+                    return (true, tokenResponse.Token, "User registered successfully");
                 }
-                else
-                {
-                    return (false,null, apiResponse?.Message ?? "error");
-                }
-
             }
             catch (Exception ex)
 			{
-                return (false,null, ex.Message);
+                Console.WriteLine(ex);
             }
+            return (false, null, "Error during registration");
         }
 
         public async Task<(bool success,string token, string message)> LoginAsync(string email,string password)
@@ -80,21 +74,19 @@ namespace ResumeAnalyzerMVC.Handlers
                     return (false, null, "Invalid credentials");
                 }
 
-                var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var tokenResponse = JsonSerializer.Deserialize<AuthService.LoginRequest.TokenResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 if (tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.Token))
                 {
                     return (true, tokenResponse.Token, "Login successful");
                 }
-                else
-                {
-                    return (false, null, "Invalid credentials");
-                }
             }
             catch (Exception ex)
             {
-                return (false, null, "Please try again later");
+                Console.WriteLine(ex);
             }
+            return (false, null, "Invalid credentials");
+
         }
 
         private string HashPassword(string password)
@@ -105,11 +97,6 @@ namespace ResumeAnalyzerMVC.Handlers
                 return Convert.ToBase64String(hashedBytes);
             }
         }
-    }
-    
-    public class TokenResponse
-    {
-        public string Token { get; set; }
     }
 }
 
