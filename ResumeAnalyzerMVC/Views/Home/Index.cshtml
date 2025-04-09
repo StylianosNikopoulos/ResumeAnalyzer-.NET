@@ -1,18 +1,10 @@
-﻿@*<h1>Welcome to Our Software Company!</h1>
-    @if (ViewBag.IsLoggedIn)
-    {
-        <a href="/Resume/Apply"><button>Apply Now</button></a>
-    }
-    else
-    {
-        <a href="/Authentication/Login"><button>Login to Apply</button></a>
-    }*@
-
-
-<section id="home" class="hero">
+﻿<section id="home" class="hero">
     <h1>Your Future, Powered by Technology</h1>
     <p>We provide innovative software solutions tailored to your business needs.</p>
-    <a href="#contact" class="btn btn-primary">Get In Touch</a>
+    @if (ViewBag.auth == true)
+    {
+       <a class="nav-link text-dark" href="@Url.Action("Apply", "Resume")">Apply</a>
+    }
 </section>
 
 <!-- Services Section -->

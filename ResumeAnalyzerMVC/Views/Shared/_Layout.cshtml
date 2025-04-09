@@ -32,13 +32,8 @@
 
     <link rel="stylesheet" type="~/css" href="css/bootstrap.css" />
 
-    <!-- fonts style -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-
-    <!--owl slider stylesheet -->
     <link rel="stylesheet" type="~/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
 
-    <!-- font awesome style -->
     <link href="css/font-awesome.min.css" rel="stylesheet" />
 
     <!-- Custom styles for this template -->
@@ -70,6 +65,21 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="@Url.Action("Logout", "Authentication")">Logout</a>
                             </li>
+
+                            var role = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+
+                            @if (role == "Admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="@Url.Action("Index", "Admin")">Admin Panel</a>
+                                </li>
+                                }
+                                else if (role == "HR")
+                                {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="@Url.Action("Index", "HR")">HR Panel</a>
+                                </li>
+                            }
                         }
                         else
                         {
@@ -82,6 +92,7 @@
                         }
                     </ul>
                 </div>
+
             </div>
         </nav>
     </header>
@@ -95,14 +106,10 @@
     <div class="main-content">
     </div>
 
-
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
-
 </html>
 

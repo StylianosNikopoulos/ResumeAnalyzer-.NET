@@ -68,8 +68,8 @@ namespace AuthService.Controllers
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Email == userRegister.Email);
 
-            var token = GenerateJwtToken(user);
-            return Ok(new TokenResponse { Status = 201 , Message = "Register success", Token = token });
+            var token = GenerateJwtToken(newUser);
+            return Ok(new TokenResponse { Status = 20 , Message = "Register success", Token = token });
         }
 
         // Login Endpoint
