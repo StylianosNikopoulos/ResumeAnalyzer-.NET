@@ -63,23 +63,11 @@
                         @if (ViewBag.auth == true)
                         {
                             <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Url.Action("Apply", "Resume")">Apply Now</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" href="@Url.Action("Logout", "Authentication")">Logout</a>
                             </li>
-
-                            var role = User.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
-
-                            @if (role == "Admin")
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" href="@Url.Action("Index", "Admin")">Admin Panel</a>
-                                </li>
-                                }
-                                else if (role == "HR")
-                                {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" href="@Url.Action("Index", "HR")">HR Panel</a>
-                                </li>
-                            }
                         }
                         else
                         {
