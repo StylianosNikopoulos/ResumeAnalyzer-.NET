@@ -24,7 +24,7 @@ namespace AuthService.Controllers
         {
             _context = context;
             _configuration = configuration;
-            _secretKey = _configuration["JWT_SECRET"];
+            _secretKey = _configuration["JwtSettings:SecretKey"];
         }
 
         // Register Endpoint
@@ -35,6 +35,12 @@ namespace AuthService.Controllers
             {
                 return BadRequest("Invalid user data");
             }
+
+            if (string.IsNullOrEmpty(userRegister.Name) || string.IsNullOrEmpty(userRegister.Password))
+            {
+                return BadRequest("Name and Password are required.");
+            }
+
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == userRegister.Email);
 
@@ -43,7 +49,7 @@ namespace AuthService.Controllers
                 return Conflict("User with this email already exists");
             }
 
-            var password = HashPassword(userRegister.PasswordHash);
+            var passwordHash = HashPassword(userRegister.Password);
 
             var userRole = await _context.Roles
                 .FirstOrDefaultAsync(r => r.RoleName == RolesEnum.User.ToString());
@@ -57,16 +63,13 @@ namespace AuthService.Controllers
             {
                 Name = userRegister.Name,
                 Email = userRegister.Email,
-                PasswordHash = password,
+                PasswordHash = passwordHash,
                 RoleId = userRole.Id,  
                 CreatedAt = DateTime.Now
             };
+
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
-
-            var user = await _context.Users
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Email == userRegister.Email);
 
             var token = GenerateJwtToken(newUser);
             return Ok(new TokenResponse { Status = 20 , Message = "Register success", Token = token });
@@ -108,7 +111,7 @@ namespace AuthService.Controllers
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secretKey);  // Convert the secret key to bytes
+            var key = Encoding.ASCII.GetBytes(_secretKey);  
 
             var claims = new[]
             {
@@ -125,7 +128,7 @@ namespace AuthService.Controllers
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);  // Return the generated token
+            return tokenHandler.WriteToken(token);  
         }
 
         private bool VerifyPassword(string enteredPassword, string storedPasswordHash)
