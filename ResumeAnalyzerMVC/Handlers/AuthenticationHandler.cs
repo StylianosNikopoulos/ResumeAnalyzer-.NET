@@ -11,92 +11,63 @@ namespace ResumeAnalyzerMVC.Handlers
 	{
 		private readonly HttpClient _httpClient;
 		private readonly string _authServiceUrl;
-        private readonly IConfiguration _configuration;
 
-        public AuthenticationHandler(HttpClient httpClient,IConfiguration configuration)
-		{
-			_httpClient = httpClient;
-            _configuration = configuration;
-            _authServiceUrl = _configuration["AUTH_SERVICE_URL"] ?? "http://localhost:5013/api/auth"; 
+        public AuthenticationHandler(HttpClient httpClient, IConfiguration configuration)
+        {
+            _httpClient = httpClient;
+            _authServiceUrl = configuration["ApiUrls:AUTH_SERVICE_URL"] ?? "https://localhost:7144/api/auth";
         }
 
         public async Task<(bool success,string token,string message)> RegisterAsync(string name,string email,string password)
 		{
-			var regModel = new
-			{
-				Name = name,
-				Email = email,
-                PasswordHash = HashPassword(password),
-            };
-
-            var jsonContent = new StringContent(JsonSerializer.Serialize(regModel), Encoding.UTF8, "application/json");
-
-			try
-			{
-				var response = await _httpClient.PostAsync($"{_authServiceUrl}/register",jsonContent);
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    return (false,null, "Unable to register");
-                }
-
-                var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                if (tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.Token))
-                {
-                    return (true, tokenResponse.Token, "User registered successfully");
-                }
-            }
-            catch (Exception ex)
-			{
-                Console.WriteLine(ex);
-            }
-            return (false, null, "Error during registration");
+            var jsonContent = new StringContent(JsonSerializer.Serialize(new { name, email, password }), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync($"{_authServiceUrl}/register", jsonContent);
+            return await ParseResponse(response);
         }
 
         public async Task<(bool success,string token, string message)> LoginAsync(string email,string password)
         {
-            var loginModel = new
-            {
-                Email = email,
-                Password = password,  
-            };
-            var jsonContent = new StringContent(JsonSerializer.Serialize(loginModel), Encoding.UTF8, "application/json");
+            var jsonContent = new StringContent(JsonSerializer.Serialize(new { email, password }), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync($"{_authServiceUrl}/login", jsonContent);
+            return await ParseResponse(response);
+
+        }
+
+        private async Task<(bool success, string token, string message)> ParseResponse(HttpResponseMessage response)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Log the full response content
+            Console.WriteLine("API Response Content: " + responseContent);
+            Console.WriteLine("Status Code: " + response.StatusCode);
 
             try
             {
-                var response = await _httpClient.PostAsync($"{_authServiceUrl}/login", jsonContent);
-                var responseContent = await response.Content.ReadAsStringAsync();
-
                 if (!response.IsSuccessStatusCode)
                 {
-                    return (false, null, "Invalid credentials");
+                    // Handle non-success status codes (e.g., 400, 500)
+                    return (false, null, $"Error: {response.StatusCode}, Message: {responseContent}");
                 }
 
-                var tokenResponse = JsonSerializer.Deserialize<AuthService.LoginRequest.TokenResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var jsonResponse = JsonSerializer.Deserialize<JsonElement>(responseContent);
 
-                if (tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.Token))
+                if (jsonResponse.TryGetProperty("token", out var tokenProperty))
                 {
-                    return (true, tokenResponse.Token, "Login successful");
+                    string token = tokenProperty.GetString();
+                    return (true, token, "Success");
+                }
+                else
+                {
+                    return (false, null, "Token not found in the response.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-            }
-            return (false, null, "Invalid credentials");
-
-        }
-
-        private string HashPassword(string password)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return Convert.ToBase64String(hashedBytes);
+                Console.WriteLine($"Error parsing response: {ex.Message}");
+                return (false, null, "Failed to parse response.");
             }
         }
+
     }
 }
 
