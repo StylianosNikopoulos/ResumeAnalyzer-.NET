@@ -37,35 +37,25 @@ namespace ResumeAnalyzerMVC.Handlers
         {
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            // Log the full response content
-            Console.WriteLine("API Response Content: " + responseContent);
-            Console.WriteLine("Status Code: " + response.StatusCode);
-
-            try
+            if (response.IsSuccessStatusCode)
             {
-                if (!response.IsSuccessStatusCode)
+                try
                 {
-                    // Handle non-success status codes (e.g., 400, 500)
-                    return (false, null, $"Error: {response.StatusCode}, Message: {responseContent}");
-                }
+                    var jsonResponse = JsonSerializer.Deserialize<JsonElement>(responseContent);
 
-                var jsonResponse = JsonSerializer.Deserialize<JsonElement>(responseContent);
+                    string token = jsonResponse.TryGetProperty("token", out var tokenElement) ? tokenElement.GetString() : null;
+                    string message = jsonResponse.TryGetProperty("message", out var messageElement) ? messageElement.GetString() : "No message";
 
-                if (jsonResponse.TryGetProperty("token", out var tokenProperty))
-                {
-                    string token = tokenProperty.GetString();
-                    return (true, token, "Success");
+                    return (true, token, message);
                 }
-                else
+                catch (Exception ex)
                 {
-                    return (false, null, "Token not found in the response.");
+                    Console.WriteLine("Error parsing response: " + ex.Message);
+                    return (false, null, "Failed to parse response.");
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error parsing response: {ex.Message}");
-                return (false, null, "Failed to parse response.");
-            }
+
+            return (false, null, "Failed");
         }
 
     }

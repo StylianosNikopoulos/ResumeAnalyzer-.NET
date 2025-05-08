@@ -56,7 +56,7 @@ namespace ResumeAnalyzerMVC.Controllers
 
             if (!success)
             {
-                ViewData["ErrorMessage"] = message;
+                ViewData["ErrorMessage"] = "Wrong Credentials";
                 return View("Login");
             }
 

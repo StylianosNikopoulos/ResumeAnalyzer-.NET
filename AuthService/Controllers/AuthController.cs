@@ -1,17 +1,13 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.NetworkInformation;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using AuthService.Enum;
 using AuthService.LoginRequest;
 using AuthService.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using BCrypt.Net;
 
 namespace AuthService.Controllers
 {
@@ -41,18 +37,21 @@ namespace AuthService.Controllers
                 return Conflict("User with this email already exists.");
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegister.Password);
-            var userRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == RolesEnum.Admin.ToString());
+            var userRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == RolesEnum.User.ToString());
+
             var newUser = new User {
                 Name = userRegister.Name,
                 Email = userRegister.Email,
                 PasswordHash = passwordHash,
-                RoleId = userRole?.Id ?? 1,
-                CreatedAt = DateTime.UtcNow };
+                RoleId = userRole?.Id ?? 7,
+                CreatedAt = DateTime.UtcNow
+            };
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Register success" });
+            var token = GenerateJwtToken(newUser);
+            return Ok(new { status = 200, message = "Register success", token = token });
         }
 
         // Login Endpoint
@@ -66,7 +65,7 @@ namespace AuthService.Controllers
 
 
             var token = GenerateJwtToken(user);
-            return Ok(new { token });
+            return Ok(new { status = 200, message = "Login success", token = token });
         }
 
         private string GenerateJwtToken(User user)
