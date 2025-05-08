@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using AuthService.Enum;
-using AuthService.AuthRequest;
 
 namespace ResumeAnalyzerMVC.Handlers
 {

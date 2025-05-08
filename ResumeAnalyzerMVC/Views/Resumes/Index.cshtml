@@ -1,0 +1,43 @@
+﻿@model List<ApplyService.Models.UserInfo>
+
+@{
+    ViewData["Title"] = "HR Dashboard";
+}
+
+<form method="post" action="@Url.Action("FilterResumes", "Resumes")">
+    <input type="text" name="keywords" placeholder="Enter skills, e.g., .NET, SQL" required />
+    <button type="submit">Analyze Resumes</button>
+</form>
+
+@if (Model != null && Model.Any())
+{
+    <h3>Top 10 Resumes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Resume ID</th>
+                <th>Candidate Name</th>
+                <th>Email</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var resume in Model)
+            {
+                <tr>
+                    <td>@resume.Id</td>
+                    <td>@resume.Name</td>
+                    <td>@resume.Email</td>
+                    <td>
+                        <a href="@Url.Action("DownloadResume", "Resumes", new { id = resume.Id })">Download</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No resumes found for the given keywords.</p>
+}
+

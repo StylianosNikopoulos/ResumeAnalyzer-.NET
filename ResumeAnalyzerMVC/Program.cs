@@ -10,6 +10,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<AuthenticationHandler>();
 builder.Services.AddHttpClient<ApplyHandler>();
+builder.Services.AddHttpClient<ResumesHandler>();
+
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddHttpContextAccessor();
 
@@ -26,13 +28,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Change to 'None' for HTTP
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
     });
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
