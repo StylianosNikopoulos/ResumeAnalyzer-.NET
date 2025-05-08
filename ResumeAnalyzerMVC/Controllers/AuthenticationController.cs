@@ -14,10 +14,12 @@ namespace ResumeAnalyzerMVC.Controllers
 
         public IActionResult Login()
         {
+            ViewBag.auth = !string.IsNullOrEmpty(HttpContext.Session.GetString("UserToken"));
             return View();
         }
         public IActionResult Register()
         {
+            ViewBag.auth = !string.IsNullOrEmpty(HttpContext.Session.GetString("UserToken"));
             return View();
         }
 

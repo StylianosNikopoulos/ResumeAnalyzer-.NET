@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace UserService.Models;
+namespace ApplyService.Models;
 
 public partial class UserInfo
 {

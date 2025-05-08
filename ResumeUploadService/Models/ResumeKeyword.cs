@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ResumeUploadService.Models;
+namespace ResumeService.Models;
 
 public partial class ResumeKeyword
 {

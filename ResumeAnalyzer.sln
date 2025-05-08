@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 25.0.1706.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{92A33B39-67C8-4842-9DAE-B6AE36DEEC90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplyService", "UserService\ApplyService.csproj", "{92A33B39-67C8-4842-9DAE-B6AE36DEEC90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResumeUploadService", "ResumeUploadService\ResumeUploadService.csproj", "{614030EB-28CA-4352-94D3-D7F5FF6682ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResumesService", "ResumeUploadService\ResumesService.csproj", "{614030EB-28CA-4352-94D3-D7F5FF6682ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService", "AuthService\AuthService.csproj", "{FEC7130D-9B63-4AE7-B633-1E8EFF089587}"
 EndProject

@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Models;
+using ApplyService.Models;
+using Microsoft.AspNetCore.Authorization;
 
-namespace UserService.Controllers
+namespace ApplyService.Controllers
 {
-    [Route("api/user")]
+    [Route("api/apply")]
     [ApiController]
     public class UserController : Controller
     {
@@ -18,65 +16,33 @@ namespace UserService.Controllers
             _context = context;
         }
 
-
-        [HttpPost("upload-resume")]
-        public async Task<IActionResult> UploadResume([FromForm] IFormFile file, [FromForm] int userId)
+        [HttpPost("resume")]
+        //[Authorize]
+        public async Task<IActionResult> UploadResume([FromForm] IFormFile file, [FromForm] string name, [FromForm] string email)
         {
-            var files = Request.Form.Files;
-
-            if (files.Count == 0)
-                return BadRequest("No files received.");
-
-            var resume = files[0]; 
-
-            if (resume == null || resume.Length == 0)
-            {
+            if (file == null || file.Length == 0)
                 return BadRequest("Invalid file");
-            }
 
-            var filePath = Path.Combine("Resumes", $"{Guid.NewGuid()}_{resume.FileName}");
-            Directory.CreateDirectory("Resumes"); 
+            var filePath = Path.Combine("Resumes", $"{Guid.NewGuid()}_{file.FileName}");
+            Directory.CreateDirectory("Resumes");
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                await resume.CopyToAsync(stream);
+                await file.CopyToAsync(stream);
             }
 
-            var user = await _context.UserInfos.FindAsync(userId);
-            if (user == null)
+            var newUserInfo = new UserInfo
             {
-                return NotFound("User not found");
-            }
+                Name = name,
+                Email = email,
+                ResumePath = filePath,
+                CreatedAt = DateTime.UtcNow
+            };
 
-            user.ResumePath = filePath;
+            _context.UserInfos.Add(newUserInfo);
             await _context.SaveChangesAsync();
 
-            return Ok();
-        }
-
-
-        [HttpGet("resumes")]
-        public IActionResult GetResumes()
-        {
-            var resumes = _context.UserInfos   //Select
-                .ToList();
-
-            return Ok(resumes);
-        }
-
-        [HttpGet("download-resume/{userId}")]
-        public IActionResult DownloadResume(int UserId)
-        {
-            var user = _context.UserInfos.Find(UserId);
-            if(user == null || string.IsNullOrEmpty(user.ResumePath))
-            {
-                return NotFound("Resume not found");
-            }
-
-            var filePath = user.ResumePath;
-            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-
-            return File(fileBytes, "application/pdf", Path.GetFileName(filePath));
+            return Ok(new { message = "Resume uploaded successfully", userId = newUserInfo.Id });
         }
     }
 }

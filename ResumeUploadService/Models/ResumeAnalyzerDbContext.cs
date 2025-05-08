@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace ResumeUploadService.Models;
+namespace ResumeService.Models;
 
 public partial class ResumeAnalyzerDbContext : DbContext
 {
