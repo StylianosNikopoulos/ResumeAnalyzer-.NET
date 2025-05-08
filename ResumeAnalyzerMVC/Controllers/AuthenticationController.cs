@@ -1,21 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using AuthService.LoginRequest;
-using AuthService.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Common;
 using ResumeAnalyzerMVC.Handlers;
-using ResumeAnalyzerMVC.Services;
 namespace ResumeAnalyzerMVC.Controllers
 {
     public class AuthenticationController : Controller
     {
         private readonly Handlers.AuthenticationHandler _authHandler;
+
         public AuthenticationController(AuthenticationHandler authHandler)  
         {
             _authHandler = authHandler;

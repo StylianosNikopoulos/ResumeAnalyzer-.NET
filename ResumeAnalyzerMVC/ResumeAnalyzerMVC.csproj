@@ -13,13 +13,11 @@
   <ItemGroup>
     <None Remove="Views\Resume\" />
     <None Remove="Views\HR\" />
-    <None Remove="Services\" />
     <None Remove="Handlers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Resume\" />
     <Folder Include="Views\HR\" />
-    <Folder Include="Services\" />
     <Folder Include="Handlers\" />
   </ItemGroup>
   <ItemGroup>
