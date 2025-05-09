@@ -1,15 +1,30 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.EntityFrameworkCore;
+using ResumeService.Models;
+using ApplyService.Models;
+using System.IO;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
+
+var configPath = "/Users/a/PROJECTS/ResumeAnalyzer/appsettings.json";
+builder.Configuration.SetBasePath(Path.GetDirectoryName(configPath)!)
+                      .AddJsonFile(Path.GetFileName(configPath), optional: false, reloadOnChange: true);
+
+
+builder.Services.AddDbContext<ResumeAnalyzerDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("ResumeConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ResumeConnection"))));
+
+
+builder.Services.AddDbContext<UserServiceDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("ApplyConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ApplyConnection"))));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,10 +32,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();  
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
-

@@ -1,13 +1,16 @@
-﻿using AuthService.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.IO;
+using AuthService.Models; 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Load appsettings.authservice.json explicitly
-builder.Configuration.AddJsonFile("appsettings.authservice.json", optional: false, reloadOnChange: true);
 
-// Read connection string from appsettings.authservice.json
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var solutionRoot = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.FullName ?? "", "ResumeAnalyzer");
+var configPath = Path.Combine(solutionRoot, "appsettings.json");
+
+builder.Configuration.AddJsonFile(configPath, optional: false, reloadOnChange: true);
+
+var connectionString = builder.Configuration.GetConnectionString("AuthConnection"); 
 
 builder.Services.AddDbContext<AuthServiceDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
@@ -15,11 +18,9 @@ builder.Services.AddDbContext<AuthServiceDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<AuthServiceDbContext>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

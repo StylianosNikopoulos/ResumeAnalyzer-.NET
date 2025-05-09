@@ -31,7 +31,7 @@ namespace ResumesService.Controllers
         [HttpGet("resumes")]
         public IActionResult GetResumes()
         {
-            var resumes = _usercontext.UserInfos  
+            var resumes = _usercontext.UserInfos
                 .ToList();
 
             return Ok(resumes);

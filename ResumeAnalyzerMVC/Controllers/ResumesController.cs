@@ -2,6 +2,7 @@
 using ApplyService.Models;
 using Microsoft.AspNetCore.Mvc;
 using ResumeAnalyzerMVC.Handlers;
+using ResumeAnalyzerMVC.Models;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace ResumeAnalyzerMVC.Controllers
@@ -23,7 +24,7 @@ namespace ResumeAnalyzerMVC.Controllers
             if (!success)
             {
                 string message = resumesOrMessage as string;
-                return View("Error", new { message });
+                return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = message });
             }
 
             if (resumesOrMessage is List<UserInfo> resumes)
@@ -31,7 +32,7 @@ namespace ResumeAnalyzerMVC.Controllers
                 return View(resumes);
             }
 
-            return View("Error", new { message = "An unexpected error occurred." });
+            return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = "Your custom error message here." });
         }
 
 
@@ -42,7 +43,7 @@ namespace ResumeAnalyzerMVC.Controllers
             if (!success)
             {
                 string message = resumesOrMessage as string;
-                return View("Error", new { message });
+                return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = message });
             }
 
             if (resumesOrMessage is List<UserInfo> resumes)
@@ -51,7 +52,7 @@ namespace ResumeAnalyzerMVC.Controllers
                 return View();
             }
 
-            return View("Error", new { message = "An unexpected error occurred." });
+            return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = "An unexpected error occurred." });
         }
 
         //public async Task<IActionResult> DownloadResume()

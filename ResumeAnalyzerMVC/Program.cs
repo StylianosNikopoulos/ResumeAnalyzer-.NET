@@ -5,7 +5,7 @@ using ResumeAnalyzerMVC.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<AuthenticationHandler>();
@@ -16,8 +16,8 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSession();
-builder.Services.AddDbContext<AuthServiceDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+//builder.Services.AddDbContext<AuthServiceDbContext>(options =>
+//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
