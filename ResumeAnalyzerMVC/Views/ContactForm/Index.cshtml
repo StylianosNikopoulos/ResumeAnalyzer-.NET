@@ -2,12 +2,110 @@
     ViewData["Title"] = "Contact Form";
 }
 
+<h2>Contact Us</h2>
+
 <section id="contact" class="contact">
-    <h2>Contact Us</h2>
     <form action="#" method="POST" class="contact-form">
-        <input type="text" name="name" placeholder="Your Name" required>
-        <input type="email" name="email" placeholder="Your Email" required>
-        <textarea name="message" placeholder="Your Message" required></textarea>
+        <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" name="name" id="name" placeholder="Your Name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" name="email" id="email" placeholder="Your Email" required>
+        </div>
+        <div class="form-group">
+            <label for="message">Your Message</label>
+            <textarea name="message" id="message" placeholder="Your Message" required></textarea>
+        </div>
         <button type="submit" class="btn btn-primary">Send Message</button>
     </form>
 </section>
+
+<style>
+    /* General Styles */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #F3F4F6;
+        margin: 0;
+        padding: 0;
+        color: #1E293B;
+    }
+
+    /* Contact Section Container */
+    .contact {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3rem 1rem;
+    }
+
+        .contact h2 {
+            font-size: 2rem;
+            text-align: center;
+            color: #4F46E5;
+            margin-bottom: 1.5rem;
+        }
+
+    /* Contact Form Styles */
+    .contact-form {
+        background-color: #FFFFFF;
+        padding: 2rem 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    /* Form Groups */
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #333;
+        }
+
+    .contact-form input,
+    .contact-form textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #E5E7EB;
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: #F9FAFB;
+        transition: border 0.3s ease;
+        resize: none;
+    }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: #4F46E5;
+            outline: none;
+            box-shadow: 0 0 10px rgba(79, 70, 229, 0.15);
+        }
+
+    /* Button Styles */
+    .contact-form button {
+        background-color: #4F46E5;
+        color: #FFFFFF;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .contact-form button:hover {
+            background-color: #4338CA;
+        }
+</style>

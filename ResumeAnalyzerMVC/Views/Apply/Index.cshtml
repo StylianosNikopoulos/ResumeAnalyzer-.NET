@@ -3,7 +3,7 @@
 }
 <link rel="stylesheet" href="~/css/apply.css" asp-append-version="true" />
 
-<h6>Upload Your Resume</h6>
+<h2>Upload Your Resume</h2>
 
 @if (ViewData["ErrorMessage"] != null)
 {
@@ -18,3 +18,124 @@
     <input type="file" name="file" required />
     <button type="submit">Upload Resume</button>
 </form>
+<style>
+    /* General Styles */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #F3F4F6;
+        margin: 0;
+        padding: 0;
+        color: #1E293B;
+    }
+
+    /* Dashboard Container */
+    .dashboard-container {
+        max-width: 700px;
+        margin: 3rem auto;
+        background-color: #FFFFFF;
+        padding: 2rem 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Form Styles */
+    form {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+        form input {
+            flex: 1;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            transition: border 0.3s ease;
+            background-color: #F9FAFB;
+        }
+
+            form input:focus {
+                border-color: #4F46E5;
+                outline: none;
+                box-shadow: 0 0 10px rgba(79, 70, 229, 0.15);
+            }
+
+        form button {
+            padding: 0.75rem 1.25rem;
+            background-color: #4F46E5;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            form button:hover {
+                background-color: #4338CA;
+            }
+
+    /* Table Styles */
+    table {
+        width: 100%;
+        margin-top: 1.5rem;
+        border-collapse: collapse;
+        background-color: #FFFFFF;
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
+        table thead {
+            background-color: #4F46E5;
+            color: #FFFFFF;
+        }
+
+        table th, table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #E5E7EB;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+
+        table tbody tr:hover {
+            background-color: #EFF6FF;
+        }
+
+        table td a {
+            color: #4F46E5;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+            table td a:hover {
+                color: #4338CA;
+            }
+
+    /* Heading Style */
+    h3 {
+        font-size: 1.6rem;
+        color: #4F46E5;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    /* No Resumes Found Message */
+    p {
+        text-align: center;
+        font-size: 1rem;
+        color: #6B7280;
+        margin-top: 2rem;
+    }
+
+
+</style>
