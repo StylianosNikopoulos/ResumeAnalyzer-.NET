@@ -16,50 +16,53 @@ namespace ResumeAnalyzerMVC.Controllers
             _resumesHandler = resumesHandler;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ViewBag.auth = !string.IsNullOrEmpty(HttpContext.Session.GetString("UserToken"));
             var (success, resumesOrMessage, statusCode) = await _resumesHandler.ShowResumesAsync();
 
             if (!success)
             {
-                string message = resumesOrMessage as string;
-                return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = message });
+                TempData["ErrorMessage"] = "Failed to load resumes.";
+                return View();
             }
 
-            if (resumesOrMessage is List<UserInfo> resumes)
-            {
-                return View(resumes);
-            }
+            var resumes = resumesOrMessage as List<UserInfo>;
 
-            return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = "Your custom error message here." });
+            return View(resumes);
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> DownloadResume(int id)
+        {
+            var (success, fileBytes, fileName, statusCode) = await _resumesHandler.DownloadResumeAsync(id);
+
+            if (success)
+            {
+                return File(fileBytes, "application/pdf", fileName);
+            }
+
+            return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = fileName });
+        }
+
+        [HttpPost]
         public async Task<IActionResult> FilterResumes(List<string> keywords)
         {
             var (success, resumesOrMessage, statusCode) = await _resumesHandler.FilterResumeAsync(keywords);
 
             if (!success)
             {
-                string message = resumesOrMessage as string;
-                return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = message });
+                return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = resumesOrMessage.ToString() });
             }
 
-            if (resumesOrMessage is List<UserInfo> resumes)
+            if (resumesOrMessage is List<UserInfo> filteredResumes)
             {
-                ViewBag.Resumes = resumes.Take(10).ToList(); 
-                return View();
+                return View("Index", filteredResumes);
             }
 
             return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = "An unexpected error occurred." });
         }
-
-        //public async Task<IActionResult> DownloadResume()
-        //{
-
-        //}
-
     }
 }
 

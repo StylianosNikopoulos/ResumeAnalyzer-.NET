@@ -3,46 +3,71 @@
 @{
     ViewData["Title"] = "HR Dashboard";
 }
+
 <h2>Analyze And Download Resumes</h2>
-<form method="post" action="@Url.Action("FilterResumes", "Resumes")">
-    <input type="text" name="keywords" placeholder="Enter skills, e.g., .NET, SQL" required />
+<form method="post" action="@Url.Action("FilterResumes", "Resumes")" onsubmit="return prepareKeywords();">
+    <input type="text" id="keywordInput" placeholder="Enter skills, e.g., .NET, SQL, Java" required />
+    <div id="keywordsContainer"></div>
     <button type="submit">Analyze Resumes</button>
 </form>
 
+<h3>@(Model != null && Model.Any() ? "All Resumes" : "No Resumes Found")</h3>
+
 @if (Model != null && Model.Any())
 {
-    <h3>Top 10 Resumes</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Resume ID</th>
-                <th>Candidate Name</th>
-                <th>Email</th>
-                <th>Download</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var resume in Model)
-            {
+    <div class="resume-table-container">
+        <table>
+            <thead>
                 <tr>
-                    <td>@resume.Id</td>
-                    <td>@resume.Name</td>
-                    <td>@resume.Email</td>
-                    <td>
-                        <a href="@Url.Action("DownloadResume", "Resumes", new { id = resume.Id })">Download</a>
-                    </td>
+                    <th>Resume ID</th>
+                    <th>Candidate Name</th>
+                    <th>Email</th>
+                    <th>Resume Uploaded</th>
+                    <th>Download</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var resume in Model)
+                {
+                    <tr>
+                        <td>@resume.Id</td>
+                        <td>@resume.Name</td>
+                        <td>@resume.Email</td>
+                        <td>@resume.CreatedAt?.ToString("MM/dd/yyyy")</td>
+                        <td>
+                            <a href="@Url.Action("DownloadResume", "Resumes", new { id = resume.Id })">Download</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 else
 {
-    <p>No resumes found for the given keywords.</p>
+    <p>No resumes found.</p>
 }
 
+<script>function prepareKeywords() {
+        const input = document.getElementById("keywordInput").value;
+        const keywords = input.split(',').map(keyword => keyword.trim()).filter(k => k);
+        const container = document.getElementById("keywordsContainer");
+        container.innerHTML = ''; 
+
+        keywords.forEach(keyword => {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "keywords";
+            input.value = keyword;
+            container.appendChild(input);
+        });
+
+        return true;
+}
+</script>
+
+
 <style>
-    /* General Styles */
     body {
         font-family: 'Poppins', sans-serif;
         background-color: #F3F4F6;
@@ -51,9 +76,8 @@ else
         color: #1E293B;
     }
 
-    /* Dashboard Container */
     form {
-        max-width: 600px;
+        max-width: 500px;
         margin: 2rem auto;
         display: flex;
         gap: 0.5rem;
@@ -91,23 +115,20 @@ else
                 background-color: #4338CA;
             }
 
-    /* Heading Style */
-    h3 {
-        text-align: center;
-        font-size: 1.8rem;
-        margin-top: 1.5rem;
-        color: #4F46E5;
+    .resume-table-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: #FFFFFF;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
     }
 
-    /* Table Styles */
     table {
-        width: 80%;
-        margin: 2rem auto;
+        width: 100%;
         border-collapse: collapse;
         background-color: #FFFFFF;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-        border-radius: 12px;
-        overflow: hidden;
     }
 
         table thead {
@@ -116,7 +137,8 @@ else
             text-align: left;
         }
 
-        table th, table td {
+        table th,
+        table td {
             padding: 0.75rem 1rem;
             border-bottom: 1px solid #E5E7EB;
             font-size: 0.95rem;
@@ -136,13 +158,4 @@ else
             table td a:hover {
                 color: #4338CA;
             }
-
-    /* No Resumes Found Message */
-    p {
-        text-align: center;
-        font-size: 1rem;
-        color: #6B7280;
-        margin-top: 2rem;
-    }
-
 </style>

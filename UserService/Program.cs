@@ -7,8 +7,10 @@ using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var solutionRoot = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.FullName ?? "", "ResumeAnalyzer");
-var configPath = Path.Combine(solutionRoot, "appsettings.json");
+var configPath = "/Users/a/PROJECTS/ResumeAnalyzer/appsettings.json";
+builder.Configuration.SetBasePath(Path.GetDirectoryName(configPath)!)
+                      .AddJsonFile(Path.GetFileName(configPath), optional: false, reloadOnChange: true);
+
 
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -18,18 +20,18 @@ builder.Services.AddDbContext<UserServiceDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("ApplyConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ApplyConnection"))));
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = false,
-            ValidateIssuerSigningKey = false,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-        };
-    });
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = false,
+//            ValidateAudience = false,
+//            ValidateLifetime = false,
+//            ValidateIssuerSigningKey = false,
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+//        };
+//    });
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
