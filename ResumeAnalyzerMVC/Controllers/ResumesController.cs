@@ -19,6 +19,8 @@ namespace ResumeAnalyzerMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            ViewBag.auth = !string.IsNullOrEmpty(HttpContext.Session.GetString("UserToken"));
+
             var (success, resumesOrMessage, statusCode) = await _resumesHandler.ShowResumesAsync();
 
             if (!success)

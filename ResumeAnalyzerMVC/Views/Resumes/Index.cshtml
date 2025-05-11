@@ -5,10 +5,15 @@
 }
 
 <h2>Analyze And Download Resumes</h2>
-<form method="post" action="@Url.Action("FilterResumes", "Resumes")" onsubmit="return prepareKeywords();">
-    <input type="text" id="keywordInput" placeholder="Enter skills, e.g., .NET, SQL, Java" required />
+
+<form method="post" action="@Url.Action("FilterResumes", "Resumes")" onsubmit="return prepareKeywords();" class="resume-filter-form">
+    <div class="input-container">
+        <input type="text" id="keywordInput" placeholder="Enter skills, e.g., .NET, SQL, Java" required />
+    </div>
     <div id="keywordsContainer"></div>
-    <button type="submit">Analyze Resumes</button>
+    <div class="button-container">
+        <button type="submit" class="btn-primary">Analyze Resumes</button>
+    </div>
 </form>
 
 <h3>@(Model != null && Model.Any() ? "All Resumes" : "No Resumes Found")</h3>
@@ -16,7 +21,7 @@
 @if (Model != null && Model.Any())
 {
     <div class="resume-table-container">
-        <table>
+        <table class="resume-table">
             <thead>
                 <tr>
                     <th>Resume ID</th>
@@ -35,7 +40,7 @@
                         <td>@resume.Email</td>
                         <td>@resume.CreatedAt?.ToString("MM/dd/yyyy")</td>
                         <td>
-                            <a href="@Url.Action("DownloadResume", "Resumes", new { id = resume.Id })">Download</a>
+                            <a href="@Url.Action("DownloadResume", "Resumes", new { id = resume.Id })" class="download-link">Download</a>
                         </td>
                     </tr>
                 }
@@ -52,20 +57,18 @@ else
         const input = document.getElementById("keywordInput").value;
         const keywords = input.split(',').map(keyword => keyword.trim()).filter(k => k);
         const container = document.getElementById("keywordsContainer");
-        container.innerHTML = ''; 
+        container.innerHTML = '';
 
         keywords.forEach(keyword => {
-            const input = document.createElement("input");
-            input.type = "hidden";
-            input.name = "keywords";
-            input.value = keyword;
-            container.appendChild(input);
+            const hiddenInput = document.createElement("input");
+            hiddenInput.type = "hidden";
+            hiddenInput.name = "keywords";
+            hiddenInput.value = keyword;
+            container.appendChild(hiddenInput);
         });
 
         return true;
-}
-</script>
-
+    }</script>
 
 <style>
     body {
@@ -76,31 +79,46 @@ else
         color: #1E293B;
     }
 
-    form {
+    .resume-filter-form {
         max-width: 500px;
         margin: 2rem auto;
         display: flex;
-        gap: 0.5rem;
-        justify-content: center;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
     }
 
-        form input {
-            flex: 1;
+    .input-container {
+        width: 100%;
+        padding: 1rem;
+        background-color: #FFFFFF;
+        border-radius: 8px;
+        border: 1px solid #DDD;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+    }
+
+        .input-container input {
+            width: 100%;
             padding: 0.75rem;
-            border: 1px solid #DDD;
-            border-radius: 8px;
+            border: none;
             font-size: 1rem;
-            background-color: #FFFFFF;
-            transition: border 0.3s ease;
+            background-color: transparent;
+            color: #333;
+            outline: none;
         }
 
-            form input:focus {
+            .input-container input:focus {
                 border-color: #4F46E5;
-                outline: none;
-                box-shadow: 0 0 10px rgba(79, 70, 229, 0.1);
+                box-shadow: 0 0 5px rgba(79, 70, 229, 0.2);
             }
 
-        form button {
+    .button-container {
+        width: 100%;
+    }
+
+        .button-container button {
+            width: 100%;
             padding: 0.75rem 1rem;
             background-color: #4F46E5;
             color: #FFFFFF;
@@ -111,12 +129,13 @@ else
             transition: background-color 0.3s;
         }
 
-            form button:hover {
+            .button-container button:hover {
                 background-color: #4338CA;
             }
 
+    /* Table Style */
     .resume-table-container {
-        max-width: 800px;
+        max-width: 900px;
         margin: 2rem auto;
         background: #FFFFFF;
         padding: 1rem;
@@ -125,37 +144,38 @@ else
         overflow: hidden;
     }
 
-    table {
+    .resume-table {
         width: 100%;
         border-collapse: collapse;
         background-color: #FFFFFF;
+        table-layout: fixed;
     }
 
-        table thead {
+        .resume-table thead {
             background-color: #4F46E5;
             color: #FFFFFF;
             text-align: left;
         }
 
-        table th,
-        table td {
-            padding: 0.75rem 1rem;
+        .resume-table th,
+        .resume-table td {
+            padding: 1rem;
             border-bottom: 1px solid #E5E7EB;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
-        table tbody tr:hover {
+        .resume-table tbody tr:hover {
             background-color: #F3F4F6;
         }
 
-        table td a {
-            color: #4F46E5;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
+    .download-link {
+        color: #4F46E5;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
 
-            table td a:hover {
-                color: #4338CA;
-            }
+        .download-link:hover {
+            color: #4338CA;
+        }
 </style>

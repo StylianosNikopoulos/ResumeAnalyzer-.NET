@@ -7,15 +7,13 @@
 <section id="contact" class="contact">
     <form action="#" method="POST" class="contact-form">
         <div class="form-group">
-            <label for="name">Your Name</label>
+            <label for="name">Full Name</label>
             <input type="text" name="name" id="name" placeholder="Your Name" required>
-        </div>
-        <div class="form-group">
-            <label for="email">Your Email</label>
+
+            <label for="email">Email</label>
             <input type="email" name="email" id="email" placeholder="Your Email" required>
-        </div>
-        <div class="form-group">
-            <label for="message">Your Message</label>
+
+            <label for="message">Message</label>
             <textarea name="message" id="message" placeholder="Your Message" required></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Send Message</button>
@@ -23,7 +21,6 @@
 </section>
 
 <style>
-    /* General Styles */
     body {
         font-family: 'Poppins', sans-serif;
         background-color: #F3F4F6;
@@ -32,7 +29,6 @@
         color: #1E293B;
     }
 
-    /* Contact Section Container */
     .contact {
         display: flex;
         justify-content: center;
@@ -47,7 +43,6 @@
             margin-bottom: 1.5rem;
         }
 
-    /* Contact Form Styles */
     .contact-form {
         background-color: #FFFFFF;
         padding: 2rem 2.5rem;
@@ -60,7 +55,6 @@
         gap: 1.5rem;
     }
 
-    /* Form Groups */
     .form-group {
         display: flex;
         flex-direction: column;
@@ -92,7 +86,6 @@
             box-shadow: 0 0 10px rgba(79, 70, 229, 0.15);
         }
 
-    /* Button Styles */
     .contact-form button {
         background-color: #4F46E5;
         color: #FFFFFF;
