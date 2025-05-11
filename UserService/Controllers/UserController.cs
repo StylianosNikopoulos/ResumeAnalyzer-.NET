@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using ApplyService.Models;
 using Microsoft.AspNetCore.Authorization;
+using ApplyService.Handlers;
 
 namespace ApplyService.Controllers
 {
@@ -9,40 +10,25 @@ namespace ApplyService.Controllers
     [ApiController]
     public class UserController : Controller
     {
-        private readonly UserServiceDbContext _context;
+        private readonly ApplyHandler _resumeUploadHandler;
 
-        public UserController(UserServiceDbContext context)
+        public UserController(ApplyHandler resumeUploadHandler)
         {
-            _context = context;
+            _resumeUploadHandler = resumeUploadHandler;
         }
 
         [HttpPost("resume")]
         //[Authorize]
         public async Task<IActionResult> UploadResume([FromForm] IFormFile file, [FromForm] string name, [FromForm] string email)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("Invalid file");
+            var result = await _resumeUploadHandler.HandleAsync(file, name, email);
 
-            var filePath = Path.Combine("Resumes", $"{Guid.NewGuid()}_{file.FileName}");
-            Directory.CreateDirectory("Resumes");
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            if (!result.Success)
             {
-                await file.CopyToAsync(stream);
+                return BadRequest(result.Message);
             }
 
-            var newUserInfo = new UserInfo
-            {
-                Name = name,
-                Email = email,
-                ResumePath = filePath,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.UserInfos.Add(newUserInfo);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Resume uploaded successfully", userId = newUserInfo.Id });
+            return Ok(new { message = result.Message, userId = result.UserId });
         }
     }
 }

@@ -34,10 +34,14 @@
   <ItemGroup>
     <None Remove="Controllers\" />
     <None Remove="Resumes\" />
+    <None Remove="Handlers\" />
+    <None Remove="Responses\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Resumes\" />
+    <Folder Include="Handlers\" />
+    <Folder Include="Responses\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="appsettings.json" />

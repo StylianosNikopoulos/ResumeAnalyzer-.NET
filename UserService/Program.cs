@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IO;
+using ApplyService.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,9 @@ var secretKey = jwtSettings.GetValue<string>("SecretKey");
 builder.Services.AddDbContext<UserServiceDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("ApplyConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ApplyConnection"))));
+
+
+builder.Services.AddScoped <ApplyHandler>();
 
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddJwtBearer(options =>
