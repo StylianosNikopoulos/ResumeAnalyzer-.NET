@@ -1,11 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using ResumeService.Models;
-using ApplyService.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Text;
-using UglyToad.PdfPig;
-using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
+using ResumesService.Handlers;
 
 namespace ResumesService.Controllers
 {
@@ -13,42 +8,34 @@ namespace ResumesService.Controllers
     [ApiController]
     public class ResumeFilterController : Controller
     {
-        private readonly ResumeAnalyzerDbContext _context;
-        private readonly UserServiceDbContext _usercontext;
+        private readonly ResumeFilterHandler _resumeFilterHandler;
 
-        public ResumeFilterController(ResumeAnalyzerDbContext context, UserServiceDbContext usercontext)
+        public ResumeFilterController(ResumeFilterHandler resumeFilterHandler)
         {
-            _context = context;
-            _usercontext = usercontext;
+            _resumeFilterHandler = resumeFilterHandler;
         }
 
         [HttpGet("resumes")]
-        public IActionResult GetResumes()
+        public async Task<IActionResult> GetResumes()
         {
-            var resumes = _usercontext.UserInfos
-                .ToList();
+            var result = await _resumeFilterHandler.HandleResumesAsync();
 
-            return Ok(resumes);
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return Ok(new { message = result.Message, resumes = result.UserInfos });
         }
 
         [HttpGet("download-resume/{userId}")]
-        public IActionResult DownloadResume(int UserId)
+        public async Task<IActionResult> DownloadResume(int UserId)
         {
-            var user = _usercontext.UserInfos.Find(UserId);
+            var resumePath = await _resumeFilterHandler.GetResumePathByUserId(UserId);
 
-            if (user == null || string.IsNullOrEmpty(user.ResumePath))
+            if (resumePath == null)
                 return NotFound("Resume not found");
 
-            var rootPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, "UserService");
-            var filePath = Path.Combine(rootPath, user.ResumePath);
-
-            Console.WriteLine("Expected File Path: " + filePath);
-
-            if (!System.IO.File.Exists(filePath))
-                return NotFound("File does not exist");
-
-            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            var fileName = Path.GetFileName(filePath);
+            var fileBytes = System.IO.File.ReadAllBytes(resumePath);
+            var fileName = Path.GetFileName(resumePath);
             return File(fileBytes, "application/pdf", fileName);
         }
 
@@ -58,42 +45,8 @@ namespace ResumesService.Controllers
             if (keywords == null || !keywords.Any())
                 return BadRequest("Keywords cannot be empty.");
 
-            // Fetch all resumes with paths
-            var resumes = _usercontext.UserInfos
-                .Where(u => !string.IsNullOrEmpty(u.ResumePath))
-                .ToList();
-
-            var filteredResumes = new List<UserInfo>();
-
-            foreach (var resume in resumes)
-            {
-                string pdfPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, "UserService", resume.ResumePath);
-
-                if (!System.IO.File.Exists(pdfPath))
-                    continue;
-
-                string text = ExtractTextFromPdf(pdfPath);
-                if (keywords.Any(keyword => text.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
-                {
-                    filteredResumes.Add(resume);
-                }
-            }
-
+            var filteredResumes = await _resumeFilterHandler.FilterResumesByKeywordsAsync(keywords);
             return Ok(filteredResumes);
-        }
-
-        // Helper Method: Extract Text from PDF
-        private string ExtractTextFromPdf(string pdfPath)
-        {
-            using (var document = PdfDocument.Open(pdfPath))
-            {
-                var text = new StringBuilder();
-                foreach (var page in document.GetPages())
-                {
-                    text.Append(ContentOrderTextExtractor.GetText(page));
-                }
-                return text.ToString();
-            }
         }
     }
 }

@@ -25,9 +25,13 @@
 
   <ItemGroup>
     <None Remove="Controllers\" />
+    <None Remove="Handlers\" />
+    <None Remove="Responces\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Handlers\" />
+    <Folder Include="Responces\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UserService\ApplyService.csproj">

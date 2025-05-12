@@ -2,6 +2,7 @@
 using ResumeService.Models;
 using ApplyService.Models;
 using System.IO;
+using ResumesService.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,9 @@ builder.Services.AddDbContext<ResumeAnalyzerDbContext>(options =>
 builder.Services.AddDbContext<UserServiceDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("ApplyConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ApplyConnection"))));
+
+builder.Services.AddScoped<ResumeFilterHandler>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
