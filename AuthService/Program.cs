@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.IO;
-using AuthService.Models; 
+using AuthService.Models;
+using AuthService.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ var connectionString = builder.Configuration.GetConnectionString("AuthConnection
 
 builder.Services.AddDbContext<AuthServiceDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+builder.Services.AddScoped<AuthHandler>(); 
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -13,13 +13,11 @@ namespace ResumesService.Handlers
 	{
         private readonly UserServiceDbContext _usercontext;
         private readonly IWebHostEnvironment _environment;
-        private readonly ResumeAnalyzerDbContext _resumecontext;
 
-        public ResumeFilterHandler(UserServiceDbContext usercontext, ResumeAnalyzerDbContext resumecontext, IWebHostEnvironment environment)
+        public ResumeFilterHandler(UserServiceDbContext usercontext, IWebHostEnvironment environment)
         {
             _usercontext = usercontext;
             _environment = environment;
-            _resumecontext = resumecontext;
         }
 
         public async Task<ResumeFilterResult> HandleResumesAsync()
