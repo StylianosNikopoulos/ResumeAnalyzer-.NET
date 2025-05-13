@@ -1,10 +1,10 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ResumeAnalyzerMVC.Handlers;
 
 namespace ResumeAnalyzerMVC.Controllers
 {
-    //[Authorize]
     public class ApplyController : Controller
 	{
 		private readonly ApplyHandler _applyHandler;
@@ -16,13 +16,25 @@ namespace ResumeAnalyzerMVC.Controllers
 
         public IActionResult Index()
 		{
-            ViewBag.auth = !string.IsNullOrEmpty(HttpContext.Session.GetString("UserToken"));
+            var token = HttpContext.Session.GetString("UserToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Authentication"); 
+            }
+
+            ViewBag.auth = true;
             return View();
-		}
+        }
 
 		[HttpPost]
-		public async Task<IActionResult> UploadResume(string name, string email, IFormFile file)
-		{
+        public async Task<IActionResult> UploadResume(string name, string email, IFormFile file)
+        {
+            var token = HttpContext.Session.GetString("UserToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Authentication"); 
+            }
+
             if (file == null || file.Length == 0)
             {
                 ViewData["ErrorMessage"] = "No file selected.";
@@ -32,11 +44,12 @@ namespace ResumeAnalyzerMVC.Controllers
             var (success, message, statusCode) = await _applyHandler.ApplyAsync(name, email, file);
 
             if (!success)
-			{
-                ViewData["ErrorMessage"] = "Some error occured while uploading";
+            {
+                ViewData["ErrorMessage"] = "An error occurred while uploading the resume.";
                 return View("Index");
             }
-			return RedirectToAction("Index", "Home");
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

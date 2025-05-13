@@ -18,7 +18,11 @@ namespace ResumeAnalyzerMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ViewBag.auth = !string.IsNullOrEmpty(HttpContext.Session.GetString("UserToken"));
+            var token = HttpContext.Session.GetString("UserToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
 
             var (success, resumesOrMessage, statusCode) = await _resumesHandler.ShowResumesAsync();
 
@@ -28,6 +32,7 @@ namespace ResumeAnalyzerMVC.Controllers
                 return View();
             }
 
+            ViewBag.auth = true;
             var resumes = resumesOrMessage as List<UserInfo>;
             return View(resumes);
         }
@@ -36,6 +41,12 @@ namespace ResumeAnalyzerMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> DownloadResume(int id)
         {
+            var token = HttpContext.Session.GetString("UserToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+
             var (success, fileBytes, fileName, statusCode) = await _resumesHandler.DownloadResumeAsync(id);
 
             if (!success)
@@ -50,6 +61,12 @@ namespace ResumeAnalyzerMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> FilterResumes(List<string> keywords)
         {
+            var token = HttpContext.Session.GetString("UserToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+
             var (success, resumesOrMessage, statusCode) = await _resumesHandler.FilterResumeAsync(keywords);
 
             if (!success)

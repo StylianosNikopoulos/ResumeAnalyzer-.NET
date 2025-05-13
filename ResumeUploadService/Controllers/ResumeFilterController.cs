@@ -1,9 +1,12 @@
 using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ResumesService.Handlers;
 
 namespace ResumesService.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/resumes")]
     [ApiController]
     public class ResumeFilterController : Controller
@@ -18,6 +21,12 @@ namespace ResumesService.Controllers
         [HttpGet("resumes")]
         public async Task<IActionResult> GetResumes()
         {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized(new { message = "Token is required." });
+            }
+
             var result = await _resumeFilterHandler.HandleResumesAsync();
 
             if (!result.Success)
@@ -29,6 +38,12 @@ namespace ResumesService.Controllers
         [HttpGet("download-resume/{userId}")]
         public async Task<IActionResult> DownloadResume(int UserId)
         {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized(new { message = "Token is required." });
+            }
+
             var resumePath = await _resumeFilterHandler.GetResumePathByUserId(UserId);
 
             if (resumePath == null)
@@ -42,6 +57,12 @@ namespace ResumesService.Controllers
         [HttpPost("filter")]
         public async Task<IActionResult> FilterResumes([FromBody] List<string> keywords)
         {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized(new { message = "Token is required." });
+            }
+
             if (keywords == null || !keywords.Any())
                 return BadRequest("Keywords cannot be empty.");
 

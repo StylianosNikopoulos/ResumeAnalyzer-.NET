@@ -1,4 +1,7 @@
 ﻿using System;
+using NuGet.Common;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
 
 namespace ResumeAnalyzerMVC.Handlers
 {
@@ -6,10 +9,12 @@ namespace ResumeAnalyzerMVC.Handlers
     {
         private readonly HttpClient _httpClient;
         private readonly string _applyServiceUrl;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ApplyHandler(HttpClient httpClient, IConfiguration configuration)
+        public ApplyHandler(HttpClient httpClient, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _httpClient = httpClient;
+            _httpContextAccessor = httpContextAccessor;
             _applyServiceUrl = configuration["ApiUrls:APPLY_SERVICE_URL"] ?? throw new ArgumentNullException("ApiUrls:APPLY_SERVICE_URL is missing.");
         }
 
@@ -26,10 +31,17 @@ namespace ResumeAnalyzerMVC.Handlers
                     formData.Add(fileContent, "file", file.FileName);
                 }
 
+                var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
+                if (!string.IsNullOrEmpty(token))
+                {
+                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                }
+
                 var response = await _httpClient.PostAsync($"{_applyServiceUrl}/resume", formData);
                 return await ParseResponse(response);
             }
         }
+
 
         private async Task<(bool success, string message, int statusCode)> ParseResponse(HttpResponseMessage response)
         {

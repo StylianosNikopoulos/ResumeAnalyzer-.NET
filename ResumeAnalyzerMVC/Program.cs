@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using ResumeAnalyzerMVC.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,17 +11,28 @@ var configPath = Path.Combine(solutionRoot, "appsettings.json");
 builder.Configuration.AddJsonFile(configPath, optional: false, reloadOnChange: true);
 
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.LoginPath = "/Authentication/Login";
-        options.LogoutPath = "/Authentication/Logout";
-        options.AccessDeniedPath = "/Authentication/AccessDenied";
-        options.SlidingExpiration = true;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    });
+        ValidateIssuer = false,          
+        ValidateAudience = false,        
+        ValidateLifetime = true,        
+        ValidateIssuerSigningKey = true, 
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"])) 
+    };
+});
+
+builder.Services.AddAuthorization();
+builder.Services.AddSession();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<AuthenticationHandler>();

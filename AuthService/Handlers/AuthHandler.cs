@@ -15,11 +15,12 @@ namespace AuthService.Handlers
         private readonly AuthServiceDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly string _secretKey;
-
-        public AuthHandler(AuthServiceDbContext context, IConfiguration configuration)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AuthHandler(AuthServiceDbContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor; 
             _secretKey = _configuration["JwtSettings:SecretKey"] ?? throw new ArgumentNullException("JwtSettings:SecretKey is missing.");
         }
 
@@ -47,6 +48,7 @@ namespace AuthService.Handlers
             await _context.SaveChangesAsync();
 
             var token = GenerateJwtToken(newUser);
+            _httpContextAccessor.HttpContext.Session.SetString("UserToken", token);
 
             return new TokenResponse {
                 Status = 201,
@@ -59,10 +61,16 @@ namespace AuthService.Handlers
         {
             var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == userLoginRequest.Email);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(userLoginRequest.Password, user.PasswordHash))
+            if (user == null)
                 return new TokenResponse { Status = 401, Message = "Invalid credentials." };
-            var token = GenerateJwtToken(user);
 
+            bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(userLoginRequest.Password, user.PasswordHash);
+
+            if (!isPasswordCorrect)
+                return new TokenResponse { Status = 401, Message = "Invalid credentials." };
+
+            var token = GenerateJwtToken(user);
+            //_httpContextAccessor.HttpContext?.Session?.SetString("UserToken", token);
             return new TokenResponse
             {
                 Status = 200,

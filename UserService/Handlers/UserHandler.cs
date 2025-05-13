@@ -4,11 +4,11 @@ using ApplyService.Responses;
 
 namespace ApplyService.Handlers
 {
-	public class ApplyHandler
-	{
+	public class UserHandler
+    {
         private readonly UserServiceDbContext _context;
         private readonly IHostEnvironment _hostEnvironment;
-        public ApplyHandler(UserServiceDbContext context, IHostEnvironment hostEnvironment)
+        public UserHandler(UserServiceDbContext context, IHostEnvironment hostEnvironment)
 		{
 			_context = context;
 			_hostEnvironment = hostEnvironment;

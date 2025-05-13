@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ApplyService.Models;
 using ApplyService.Handlers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,26 +14,30 @@ builder.Configuration.AddJsonFile(configPath, optional: false, reloadOnChange: t
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings.GetValue<string>("SecretKey");
 
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false; 
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,       
+            ValidateAudience = false,   
+            ValidateLifetime = true,      
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+        };
+    });
+
+
 builder.Services.AddDbContext<UserServiceDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("ApplyConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ApplyConnection"))));
 
+builder.Services.AddAuthorization();
 
-
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuer = false,
-//            ValidateAudience = false,
-//            ValidateLifetime = false,
-//            ValidateIssuerSigningKey = false,
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-//        };
-//    });
-
-builder.Services.AddScoped<ApplyHandler>();
+builder.Services.AddScoped<UserHandler>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

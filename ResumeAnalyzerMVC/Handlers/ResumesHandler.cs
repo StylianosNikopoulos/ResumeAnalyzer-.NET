@@ -10,17 +10,26 @@ namespace ResumeAnalyzerMVC.Handlers
     {
         private readonly HttpClient _httpClient;
         private readonly string _resumesService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ResumesHandler(HttpClient httpClient, IConfiguration configuration)
+        public ResumesHandler(HttpClient httpClient, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _httpClient = httpClient;
+            _httpContextAccessor = httpContextAccessor;
             _resumesService = configuration["ApiUrls:RESUME_SERVICE_URL"] ?? throw new ArgumentNullException("ApiUrls:RESUME_SERVICE_URL is missing.");
         }
 
         // Get resumes (For endpoints where response contains Resumes)
         public async Task<(bool success, object resumesOrMessage, int statusCode)> ShowResumesAsync()
         {
+            var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
+
             var response = await _httpClient.GetAsync($"{_resumesService}/resumes");
+
             return await HandleApiResponseForResumes<List<UserInfo>>(response);
         }
 
@@ -29,6 +38,12 @@ namespace ResumeAnalyzerMVC.Handlers
         {
             try
             {
+                var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
+                if (!string.IsNullOrEmpty(token))
+                {
+                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                }
+
                 var response = await _httpClient.GetAsync($"{_resumesService}/download-resume/{id}");
 
                 if (response.IsSuccessStatusCode)
@@ -54,6 +69,13 @@ namespace ResumeAnalyzerMVC.Handlers
         {
             var url = $"{_resumesService}/filter";
             var content = new StringContent(JsonSerializer.Serialize(keywords), Encoding.UTF8, "application/json");
+
+            var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
+
             var response = await _httpClient.PostAsync(url, content);
 
             return await HandleApiResponse<List<UserInfo>>(response);

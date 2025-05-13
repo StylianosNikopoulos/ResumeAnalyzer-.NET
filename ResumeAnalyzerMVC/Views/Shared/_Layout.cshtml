@@ -28,17 +28,18 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
 
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="@Url.Action("Index", "ContactForm")">Contact Form</a>
+                        </li>
                         @if (ViewBag.auth == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="@Url.Action("Index", "Apply")">Apply Now</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="@Url.Action("Index", "ContactForm")">Contact Form</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link text-dark" href="@Url.Action("Index", "Resumes")">Dashboard</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Url.Action("Index", "Apply")">Apply Now</a>
+                            </li>
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="@Url.Action("Logout", "Authentication")">Logout</a>
                             </li>
@@ -48,13 +49,13 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="@Url.Action("Login", "Authentication")">Login</a>
                             </li>
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="@Url.Action("Register", "Authentication")">Register</a>
                             </li>
                         }
                     </ul>
                 </div>
-
             </div>
         </nav>
     </header>
