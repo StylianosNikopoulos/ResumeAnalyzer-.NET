@@ -12,7 +12,7 @@ namespace ResumeAnalyzerMVC.Handlers
         public AuthenticationHandler(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _authServiceUrl = configuration["ApiUrls:AUTH_SERVICE_URL"] ?? "https://localhost:7144/api/auth";
+            _authServiceUrl = configuration["ApiUrls:AUTH_SERVICE_URL"] ?? throw new ArgumentNullException("ApiUrls:AUTH_SERVICE_URL is missing.");
         }
 
         public async Task<(bool success,string token,string message)> RegisterAsync(string name,string email,string password)

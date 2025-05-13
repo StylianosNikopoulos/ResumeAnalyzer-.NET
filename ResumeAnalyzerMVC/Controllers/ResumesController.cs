@@ -2,7 +2,6 @@
 using ApplyService.Models;
 using Microsoft.AspNetCore.Mvc;
 using ResumeAnalyzerMVC.Handlers;
-using ResumeAnalyzerMVC.Models;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace ResumeAnalyzerMVC.Controllers
@@ -30,7 +29,6 @@ namespace ResumeAnalyzerMVC.Controllers
             }
 
             var resumes = resumesOrMessage as List<UserInfo>;
-
             return View(resumes);
         }
 
@@ -40,12 +38,13 @@ namespace ResumeAnalyzerMVC.Controllers
         {
             var (success, fileBytes, fileName, statusCode) = await _resumesHandler.DownloadResumeAsync(id);
 
-            if (success)
+            if (!success)
             {
-                return File(fileBytes, "application/pdf", fileName);
+                TempData["ErrorMessage"] = "Failed to download resume.";
+                return View();
             }
 
-            return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = fileName });
+            return File(fileBytes, "application/pdf", fileName);
         }
 
         [HttpPost]
@@ -55,7 +54,8 @@ namespace ResumeAnalyzerMVC.Controllers
 
             if (!success)
             {
-                return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = resumesOrMessage.ToString() });
+                TempData["ErrorMessage"] = "Failed to filter resumes.";
+                return View();
             }
 
             if (resumesOrMessage is List<UserInfo> filteredResumes)
@@ -63,7 +63,8 @@ namespace ResumeAnalyzerMVC.Controllers
                 return View("Index", filteredResumes);
             }
 
-            return View("~/Views/Home/Error.cshtml", new ErrorViewModel { Message = "An unexpected error occurred." });
+            TempData["ErrorMessage"] = "Failed to filter resumes.";
+            return View();
         }
     }
 }

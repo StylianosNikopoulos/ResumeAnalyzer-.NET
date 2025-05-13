@@ -35,7 +35,7 @@ namespace ResumeAnalyzerMVC.Controllers
             var (success,token, message) = await _authHandler.RegisterAsync(name, email, password);
             if (!success)
             {
-                ViewData["ErrorMessage"] = message;
+                ViewData["ErrorMessage"] = "Some error occured";
                 return View();
             }
             HttpContext.Session.SetString("UserToken", token);

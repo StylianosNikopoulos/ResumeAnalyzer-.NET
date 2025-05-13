@@ -1,14 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.IO;
 using AuthService.Models;
 using AuthService.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 var solutionRoot = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.FullName ?? "", "ResumeAnalyzer");
 var configPath = Path.Combine(solutionRoot, "appsettings.json");
-
 builder.Configuration.AddJsonFile(configPath, optional: false, reloadOnChange: true);
 
 var connectionString = builder.Configuration.GetConnectionString("AuthConnection"); 

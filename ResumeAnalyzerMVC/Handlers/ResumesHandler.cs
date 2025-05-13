@@ -14,7 +14,7 @@ namespace ResumeAnalyzerMVC.Handlers
         public ResumesHandler(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _resumesService = configuration["ApiUrls:RESUME_SERVICE_URL"] ?? "https://localhost:7083/api/resumes";
+            _resumesService = configuration["ApiUrls:RESUME_SERVICE_URL"] ?? throw new ArgumentNullException("ApiUrls:RESUME_SERVICE_URL is missing.");
         }
 
         // Get resumes (For endpoints where response contains Resumes)

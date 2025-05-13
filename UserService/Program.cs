@@ -1,18 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ApplyService.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.IO;
 using ApplyService.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configPath = "/Users/a/PROJECTS/ResumeAnalyzer/appsettings.json";
-builder.Configuration.SetBasePath(Path.GetDirectoryName(configPath)!)
-                      .AddJsonFile(Path.GetFileName(configPath), optional: false, reloadOnChange: true);
-
-
+var solutionRoot = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.FullName ?? "", "ResumeAnalyzer");
+var configPath = Path.Combine(solutionRoot, "appsettings.json");
+builder.Configuration.AddJsonFile(configPath, optional: false, reloadOnChange: true);
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings.GetValue<string>("SecretKey");
@@ -22,7 +16,6 @@ builder.Services.AddDbContext<UserServiceDbContext>(options =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ApplyConnection"))));
 
 
-builder.Services.AddScoped <ApplyHandler>();
 
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddJwtBearer(options =>
@@ -36,6 +29,8 @@ builder.Services.AddScoped <ApplyHandler>();
 //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
 //        };
 //    });
+
+builder.Services.AddScoped<ApplyHandler>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

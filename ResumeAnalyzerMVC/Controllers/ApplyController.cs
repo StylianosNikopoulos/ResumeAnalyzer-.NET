@@ -1,6 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ResumeAnalyzerMVC.Handlers;
 
@@ -35,7 +33,7 @@ namespace ResumeAnalyzerMVC.Controllers
 
             if (!success)
 			{
-                ViewData["ErrorMessage"] = message;
+                ViewData["ErrorMessage"] = "Some error occured while uploading";
                 return View("Index");
             }
 			return RedirectToAction("Index", "Home");

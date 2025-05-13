@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{ADFF2413-93D7-48F3-8AE9-6E8C548230B4}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
+		appsettings.json = appsettings.json
 	EndProjectSection
 EndProject
 Global

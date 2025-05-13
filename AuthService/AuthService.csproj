@@ -30,16 +30,16 @@
   <ItemGroup>
     <None Remove="Controllers\" />
     <None Remove="Enum\" />
-    <None Remove="AuthRequest\" />
     <None Remove="Handlers\" />
-    <None Remove="AuthResponse\" />
+    <None Remove="AuthResponses\" />
+    <None Remove="AuthRequests\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Enum\" />
-    <Folder Include="AuthRequest\" />
     <Folder Include="Handlers\" />
-    <Folder Include="AuthResponse\" />
+    <Folder Include="AuthResponses\" />
+    <Folder Include="AuthRequests\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="appsettings.Development.json" />

@@ -1,23 +1,12 @@
-﻿using AuthService.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using ResumeAnalyzerMVC.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var solutionRoot = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.FullName ?? "", "ResumeAnalyzer");
+var configPath = Path.Combine(solutionRoot, "appsettings.json");
+builder.Configuration.AddJsonFile(configPath, optional: false, reloadOnChange: true);
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient<AuthenticationHandler>();
-builder.Services.AddHttpClient<ApplyHandler>();
-builder.Services.AddHttpClient<ResumesHandler>();
-
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddSession();
-//builder.Services.AddDbContext<AuthServiceDbContext>(options =>
-//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -28,9 +17,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     });
 
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient<AuthenticationHandler>();
+builder.Services.AddHttpClient<ApplyHandler>();
+builder.Services.AddHttpClient<ResumesHandler>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession();
 
 var app = builder.Build();
 

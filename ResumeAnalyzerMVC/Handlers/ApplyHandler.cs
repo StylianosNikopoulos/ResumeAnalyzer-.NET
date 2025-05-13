@@ -10,7 +10,7 @@ namespace ResumeAnalyzerMVC.Handlers
         public ApplyHandler(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _applyServiceUrl = configuration["ApiUrls:APPLY_SERVICE_URL"] ?? "https://localhost:7258/api/apply";
+            _applyServiceUrl = configuration["ApiUrls:APPLY_SERVICE_URL"] ?? throw new ArgumentNullException("ApiUrls:APPLY_SERVICE_URL is missing.");
         }
 
         public async Task<(bool success, string message, int statusCode)> ApplyAsync(string name, string email, IFormFile file)
