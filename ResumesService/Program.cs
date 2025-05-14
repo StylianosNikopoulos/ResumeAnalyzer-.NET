@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ApplyService.Models;
+using UserService.Models;
 using ResumesService.Handlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -40,7 +40,7 @@ builder.Services.AddDbContext<UserServiceDbContext>(options =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<ResumeFilterHandler>();
+builder.Services.AddScoped<ResumesHandler>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

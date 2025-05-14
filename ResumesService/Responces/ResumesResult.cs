@@ -1,9 +1,9 @@
 ﻿using System;
-using ApplyService.Models;
+using UserService.Models;
 
 namespace ResumesService.Responces
 {
-	public class ResumeFilterResult
+	public class ResumesResult
 	{
         public bool Success { get; set; }
         public string Message { get; set; }

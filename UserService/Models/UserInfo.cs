@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace ApplyService.Models;
+namespace UserService.Models;
 
 public partial class UserInfo
 {

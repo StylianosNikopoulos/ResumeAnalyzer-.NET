@@ -37,8 +37,7 @@
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
     <ProjectReference Include="..\UserService\UserService.csproj" />
-    <ProjectReference Include="..\ResumeUploadService\ResumeUploadService.csproj" />
-    <ProjectReference Include="..\UserService\ApplyService.csproj">
+    <ProjectReference Include="..\ResumesService\ResumesService.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>

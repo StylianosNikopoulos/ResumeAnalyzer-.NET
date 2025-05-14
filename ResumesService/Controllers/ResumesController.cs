@@ -6,14 +6,13 @@ using ResumesService.Handlers;
 
 namespace ResumesService.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/resumes")]
     [ApiController]
-    public class ResumeFilterController : Controller
+    public class ResumesController : Controller
     {
-        private readonly ResumeFilterHandler _resumeFilterHandler;
+        private readonly ResumesHandler _resumeFilterHandler;
 
-        public ResumeFilterController(ResumeFilterHandler resumeFilterHandler)
+        public ResumesController(ResumesHandler resumeFilterHandler)
         {
             _resumeFilterHandler = resumeFilterHandler;
         }

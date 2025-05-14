@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using ApplyService.Models;
+using UserService.Models;
 using Microsoft.EntityFrameworkCore;
 using ResumesService.Responces;
 using UglyToad.PdfPig;
@@ -8,22 +8,22 @@ using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
 
 namespace ResumesService.Handlers
 {
-	public class ResumeFilterHandler
+	public class ResumesHandler
 	{
         private readonly UserServiceDbContext _usercontext;
         private readonly IWebHostEnvironment _environment;
 
-        public ResumeFilterHandler(UserServiceDbContext usercontext, IWebHostEnvironment environment)
+        public ResumesHandler(UserServiceDbContext usercontext, IWebHostEnvironment environment)
         {
             _usercontext = usercontext;
             _environment = environment;
         }
 
-        public async Task<ResumeFilterResult> HandleResumesAsync()
+        public async Task<ResumesResult> HandleResumesAsync()
 		{
             var resumes = await _usercontext.UserInfos.ToListAsync();
 
-            return new ResumeFilterResult
+            return new ResumesResult
             {
                 Success = true,
                 Message = "Success handled all Resumes",

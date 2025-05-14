@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ApplyService.Models;
-using ApplyService.Handlers;
+using UserService.Models;
+using UserService.Handlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

@@ -1,11 +1,10 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using ApplyService.Models;
 using Microsoft.AspNetCore.Authorization;
-using ApplyService.Handlers;
+using UserService.Handlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace ApplyService.Controllers
+namespace UserService.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
     [Route("api/apply")]

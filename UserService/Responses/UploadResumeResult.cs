@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ApplyService.Responses
+namespace UserService.Responses
 {
     public class UploadResumeResult
     {

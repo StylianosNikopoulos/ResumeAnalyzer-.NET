@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Text.Json;
-using ApplyService.Models;
+using UserService.Models;
 using ResumeAnalyzerMVC.Responces;
 
 namespace ResumeAnalyzerMVC.Handlers
@@ -19,7 +19,7 @@ namespace ResumeAnalyzerMVC.Handlers
             _resumesService = configuration["ApiUrls:RESUME_SERVICE_URL"] ?? throw new ArgumentNullException("ApiUrls:RESUME_SERVICE_URL is missing.");
         }
 
-        // Get resumes (For endpoints where response contains Resumes)
+        // Get resumes 
         public async Task<(bool success, object resumesOrMessage, int statusCode)> ShowResumesAsync()
         {
             var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
@@ -67,19 +67,21 @@ namespace ResumeAnalyzerMVC.Handlers
         // Post (filter based on keywords)
         public async Task<(bool success, object resumesOrMessage, int statusCode)> FilterResumeAsync(List<string> keywords)
         {
+            var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
+
             var url = $"{_resumesService}/filter";
             var content = new StringContent(JsonSerializer.Serialize(keywords), Encoding.UTF8, "application/json");
 
-            var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
             if (!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             }
 
             var response = await _httpClient.PostAsync(url, content);
-
             return await HandleApiResponse<List<UserInfo>>(response);
         }
+
+
         //Helper for ShowResumesAsync
         private async Task<(bool success, object result, int statusCode)> HandleApiResponseForResumes<T>(HttpResponseMessage response)
         {

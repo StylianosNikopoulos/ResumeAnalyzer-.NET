@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApplyService.Models;
+namespace UserService.Models;
 
 public partial class UserServiceDbContext : DbContext
 {

@@ -1,8 +1,8 @@
 ﻿using System;
-using ApplyService.Models;
-using ApplyService.Responses;
+using UserService.Models;
+using UserService.Responses;
 
-namespace ApplyService.Handlers
+namespace UserService.Handlers
 {
 	public class UserHandler
     {

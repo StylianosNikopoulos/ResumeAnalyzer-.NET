@@ -11,7 +11,6 @@ var solutionRoot = Path.Combine(Directory.GetParent(Directory.GetCurrentDirector
 var configPath = Path.Combine(solutionRoot, "appsettings.json");
 builder.Configuration.AddJsonFile(configPath, optional: false, reloadOnChange: true);
 
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -23,36 +22,42 @@ builder.Services.AddAuthentication(options =>
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false,          
-        ValidateAudience = false,        
-        ValidateLifetime = true,        
-        ValidateIssuerSigningKey = true, 
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"])),
-        RoleClaimType = ClaimTypes.Role 
-
+        RoleClaimType = ClaimTypes.Role
     };
 });
 
 builder.Services.AddAuthorization();
 builder.Services.AddSession();
 
-builder.Services.AddControllersWithViews();
+// Dependency Injection for Handlers
 builder.Services.AddHttpClient<AuthenticationHandler>();
 builder.Services.AddHttpClient<ApplyHandler>();
-builder.Services.AddHttpClient<ResumesHandler>();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddHttpClient<ResumesHandler>(); 
+//builder.Services.AddScoped<ResumesHandler>();     
+
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSession();
+builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
+// Middleware Setup
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -60,6 +65,7 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Route Configuration
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
