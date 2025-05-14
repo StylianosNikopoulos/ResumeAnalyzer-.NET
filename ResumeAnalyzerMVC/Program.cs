@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -27,7 +28,9 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,        
         ValidateIssuerSigningKey = true, 
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"])) 
+            Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"])),
+        RoleClaimType = ClaimTypes.Role 
+
     };
 });
 

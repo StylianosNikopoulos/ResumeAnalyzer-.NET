@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ResumeAnalyzerMVC.Handlers;
 namespace ResumeAnalyzerMVC.Controllers
 {
-    public class AuthenticationController : Controller
+    public class AuthenticationController : BaseController
     {
         private readonly Handlers.AuthenticationHandler _authHandler;
 

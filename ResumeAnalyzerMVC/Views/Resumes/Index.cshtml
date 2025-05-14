@@ -24,7 +24,6 @@
         <table class="resume-table">
             <thead>
                 <tr>
-                    <th>Resume ID</th>
                     <th>Candidate Name</th>
                     <th>Email</th>
                     <th>Resume Uploaded</th>
@@ -35,7 +34,6 @@
                 @foreach (var resume in Model)
                 {
                     <tr>
-                        <td>@resume.Id</td>
                         <td>@resume.Name</td>
                         <td>@resume.Email</td>
                         <td>@(resume.CreatedAt != null ? resume.CreatedAt?.ToString("MM/dd/yyyy") : "N/A")</td>

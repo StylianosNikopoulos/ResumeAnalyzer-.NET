@@ -86,9 +86,9 @@ namespace AuthService.Handlers
 
             var claims = new[]
             {
-                new Claim("id", user.Id.ToString()),
-                new Claim("email", user.Email),
-                new Claim("role", user.Role.RoleName)
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.RoleName)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor

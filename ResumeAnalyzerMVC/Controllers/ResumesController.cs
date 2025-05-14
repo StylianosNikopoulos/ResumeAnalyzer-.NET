@@ -1,12 +1,13 @@
 ﻿using System;
 using ApplyService.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ResumeAnalyzerMVC.Handlers;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace ResumeAnalyzerMVC.Controllers
 {
-    public class ResumesController : Controller
+    public class ResumesController : BaseController
     {
         private readonly Handlers.ResumesHandler _resumesHandler;
 
@@ -24,6 +25,32 @@ namespace ResumeAnalyzerMVC.Controllers
                 return RedirectToAction("Login", "Authentication");
             }
 
+            string userRole = "User"; 
+            bool isAuthenticated = false;
+
+            try
+            {
+                var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+
+                if (jwtToken != null)
+                {
+                    isAuthenticated = true;
+                    var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role");
+                    if (roleClaim != null)
+                    {
+                        userRole = roleClaim.Value;
+                    }
+                }
+            }
+            catch
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+
+            ViewBag.auth = isAuthenticated;
+            ViewBag.role = userRole;
+
             var (success, resumesOrMessage, statusCode) = await _resumesHandler.ShowResumesAsync();
 
             if (!success)
@@ -32,11 +59,9 @@ namespace ResumeAnalyzerMVC.Controllers
                 return View();
             }
 
-            ViewBag.auth = true;
             var resumes = resumesOrMessage as List<UserInfo>;
             return View(resumes);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> DownloadResume(int id)
