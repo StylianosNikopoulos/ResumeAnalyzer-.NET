@@ -5,7 +5,6 @@ using ResumeAnalyzerMVC.Handlers;
 
 namespace ResumeAnalyzerMVC.Controllers
 {
-    [Authorize(Roles = "User")]
     public class ApplyController : BaseController
     {
 		private readonly ApplyHandler _applyHandler;

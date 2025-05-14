@@ -38,4 +38,10 @@
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Models\ResumeAnalyzerDbContext.cs" />
+    <Compile Remove="Models\Resume.cs" />
+    <Compile Remove="Models\ResumeKeyword.cs" />
+    <Compile Remove="Models\Keyword.cs" />
+  </ItemGroup>
 </Project>

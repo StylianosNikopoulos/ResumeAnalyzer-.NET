@@ -1,5 +1,4 @@
-﻿/* General Reset */
-* {
+﻿* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -20,7 +19,6 @@ body {
     flex-grow: 1;
 }
 
-/* Light & Dark Theme */
 :root {
     --primary-color: #4F46E5;
     --secondary-color: #4338CA;
@@ -108,13 +106,6 @@ h2, h3 {
     margin-bottom: 20px;
 }
 
-/*label {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 5px;
-}
-*/
 input[type="email"], input[type="password"],input[type="text"] {
     width: 100%;
     padding: 10px;
@@ -180,7 +171,6 @@ button[type="submit"] {
             text-decoration: underline;
         }
 
-/* Add subtle hover animation to form elements */
 input[type="email"], input[type="password"], button[type="submit"], input[type="text"] {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -190,7 +180,6 @@ input[type="email"], input[type="password"], button[type="submit"], input[type="
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-/* Animations */
 @keyframes fadeIn {
     0% {
         opacity: 0;
@@ -212,7 +201,7 @@ input[type="email"], input[type="password"], button[type="submit"], input[type="
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Full height of viewport */
+    height: 100vh; 
     width: 100%;
 }
 

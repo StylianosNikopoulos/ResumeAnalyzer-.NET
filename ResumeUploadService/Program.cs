@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ResumeService.Models;
 using ApplyService.Models;
 using ResumesService.Handlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,10 +12,6 @@ var configPath = Path.Combine(solutionRoot, "appsettings.json");
 builder.Configuration.AddJsonFile(configPath, optional: false, reloadOnChange: true);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings.GetValue<string>("SecretKey");
-
-builder.Services.AddDbContext<ResumeAnalyzerDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("ResumeConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ResumeConnection"))));
 
 
 builder.Services.AddDbContext<UserServiceDbContext>(options =>
