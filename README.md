@@ -14,7 +14,7 @@
 - ✅ **Role-Based Authorization:** Access control (HR and User roles).
 - ✅ **Resume Upload:** Securely upload resumes (e.g., PDF, DOCX).
 - ✅ **Resume Dashboard:** HR users can view and manage submitted resumes.
-- ✅ **Secure API Services:** Separate AuthService and ApplyService with JWT protection.
+- ✅ **Secure API Services:** Separate AuthService, ApplyService and  ResumesService with JWT protection.
 - ✅ **Session Management:** Secure user sessions with JWT and session storage.
 
 ---
