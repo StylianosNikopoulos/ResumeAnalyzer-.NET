@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using ResumeAnalyzerMVC.Handlers;
@@ -36,11 +35,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddSession();
 
-// Dependency Injection for Handlers
 builder.Services.AddHttpClient<AuthenticationHandler>();
 builder.Services.AddHttpClient<ApplyHandler>();
 builder.Services.AddHttpClient<ResumesHandler>(); 
-//builder.Services.AddScoped<ResumesHandler>();     
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
@@ -58,7 +55,6 @@ else
     app.UseHsts();
 }
 
-// Middleware Setup
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -66,7 +62,6 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Route Configuration
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

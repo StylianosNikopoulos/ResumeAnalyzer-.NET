@@ -70,7 +70,6 @@ namespace AuthService.Handlers
                 return new TokenResponse { Status = 401, Message = "Invalid credentials." };
 
             var token = GenerateJwtToken(user);
-            //_httpContextAccessor.HttpContext?.Session?.SetString("UserToken", token);
             return new TokenResponse
             {
                 Status = 200,

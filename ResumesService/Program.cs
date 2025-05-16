@@ -32,7 +32,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Add CORS policy here
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
@@ -65,7 +64,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Use CORS before authentication & authorization
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthentication();

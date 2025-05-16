@@ -70,7 +70,7 @@ namespace ResumesService.Handlers
             return filteredResumes;
         }
 
-        // Helper Method: Extract Text from PDF
+        // Helper Method
         private string ExtractTextFromPdf(string pdfPath)
         {
             using (var document = PdfDocument.Open(pdfPath))
