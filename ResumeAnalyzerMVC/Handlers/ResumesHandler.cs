@@ -20,66 +20,56 @@ namespace ResumeAnalyzerMVC.Handlers
         }
 
         // Get resumes 
-        public async Task<(bool success, object resumesOrMessage, int statusCode)> ShowResumesAsync()
+        public async Task<(bool success, object resumesOrMessage, int statusCode)> ShowResumesAsync(string token)
         {
-            var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_resumesService}/resumes");
             if (!string.IsNullOrEmpty(token))
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            }
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var response = await _httpClient.GetAsync($"{_resumesService}/resumes");
+            var response = await _httpClient.SendAsync(request);
 
             return await HandleApiResponseForResumes<List<UserInfo>>(response);
         }
 
-        // Get resume (download)
-        public async Task<(bool success, byte[] fileBytes, string fileName, int statusCode)> DownloadResumeAsync(int id)
+        public async Task<(bool success, object resumesOrMessage, int statusCode)> FilterResumeAsync(List<string> keywords, string token)
         {
-            try
-            {
-                var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
-                if (!string.IsNullOrEmpty(token))
-                {
-                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                }
-
-                var response = await _httpClient.GetAsync($"{_resumesService}/download-resume/{id}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var fileBytes = await response.Content.ReadAsByteArrayAsync();
-                    string fileName = $"Resume_{id}.pdf";
-
-                    return (true, fileBytes, fileName, (int)response.StatusCode);
-                }
-
-                string errorMessage = await response.Content.ReadAsStringAsync();
-                return (false, null, errorMessage, (int)response.StatusCode);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error while downloading resume: {ex.Message}");
-                return (false, null, ex.Message, 500);
-            }
-        }
-
-        // Post (filter based on keywords)
-        public async Task<(bool success, object resumesOrMessage, int statusCode)> FilterResumeAsync(List<string> keywords)
-        {
-            var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
-
             var url = $"{_resumesService}/filter";
             var content = new StringContent(JsonSerializer.Serialize(keywords), Encoding.UTF8, "application/json");
+            var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = content
+            };
 
             if (!string.IsNullOrEmpty(token))
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            }
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var response = await _httpClient.PostAsync(url, content);
+            var response = await _httpClient.SendAsync(request);
+
             return await HandleApiResponse<List<UserInfo>>(response);
         }
+
+        public async Task<(bool success, byte[] fileBytes, string fileName, int statusCode)> DownloadResumeAsync(int id, string token)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_resumesService}/download-resume/{id}");
+            if (!string.IsNullOrEmpty(token))
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var fileBytes = await response.Content.ReadAsByteArrayAsync();
+                string fileName = $"Resume_{id}.pdf";
+                return (true, fileBytes, fileName, (int)response.StatusCode);
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                return (false, null, errorMessage, (int)response.StatusCode);
+            }
+        }
+
+
 
 
         //Helper for ShowResumesAsync

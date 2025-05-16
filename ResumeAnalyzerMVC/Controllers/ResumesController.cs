@@ -17,49 +17,40 @@ namespace ResumeAnalyzerMVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? keywords)
         {
             var token = HttpContext.Session.GetString("UserToken");
             if (string.IsNullOrEmpty(token))
-            {
                 return RedirectToAction("Login", "Authentication");
-            }
 
-            string userRole = "User"; 
-            bool isAuthenticated = false;
+            List<UserInfo> resumes;
 
-            try
+            if (!string.IsNullOrEmpty(keywords))
             {
-                var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-                var jwtToken = handler.ReadJwtToken(token);
+                var keywordList = keywords.Split(',').Select(k => k.Trim()).Where(k => !string.IsNullOrEmpty(k)).ToList();
+                var (success, resumesOrMessage, statusCode) = await _resumesHandler.FilterResumeAsync(keywordList, token);
 
-                if (jwtToken != null)
+                if (!success)
                 {
-                    isAuthenticated = true;
-                    var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role");
-                    if (roleClaim != null)
-                    {
-                        userRole = roleClaim.Value;
-                    }
+                    TempData["ErrorMessage"] = "Failed to filter resumes.";
+                    return View(new List<UserInfo>());
                 }
+
+                resumes = resumesOrMessage as List<UserInfo> ?? new List<UserInfo>();
             }
-            catch
+            else
             {
-                return RedirectToAction("Login", "Authentication");
+                var (success, resumesOrMessage, statusCode) = await _resumesHandler.ShowResumesAsync(token);
+
+                if (!success)
+                {
+                    TempData["ErrorMessage"] = "Failed to load resumes.";
+                    return View(new List<UserInfo>());
+                }
+
+                resumes = resumesOrMessage as List<UserInfo> ?? new List<UserInfo>();
             }
 
-            ViewBag.auth = isAuthenticated;
-            ViewBag.role = userRole;
-
-            var (success, resumesOrMessage, statusCode) = await _resumesHandler.ShowResumesAsync();
-
-            if (!success)
-            {
-                TempData["ErrorMessage"] = "Failed to load resumes.";
-                return View();
-            }
-
-            var resumes = resumesOrMessage as List<UserInfo>;
             return View(resumes);
         }
 
@@ -68,11 +59,9 @@ namespace ResumeAnalyzerMVC.Controllers
         {
             var token = HttpContext.Session.GetString("UserToken");
             if (string.IsNullOrEmpty(token))
-            {
                 return RedirectToAction("Login", "Authentication");
-            }
 
-            var (success, fileBytes, fileName, statusCode) = await _resumesHandler.DownloadResumeAsync(id);
+            var (success, fileBytes, fileName, statusCode) = await _resumesHandler.DownloadResumeAsync(id, token);
 
             if (!success)
             {
@@ -83,30 +72,31 @@ namespace ResumeAnalyzerMVC.Controllers
             return File(fileBytes, "application/pdf", fileName);
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> FilterResumes(List<string> keywords)
+        public async Task<IActionResult> FilterResumes([FromBody] List<string> keywords)
         {
             var token = HttpContext.Session.GetString("UserToken");
             if (string.IsNullOrEmpty(token))
             {
                 return RedirectToAction("Login", "Authentication");
             }
+            if (keywords == null || !keywords.Any())
+                return BadRequest("Keywords cannot be empty.");
 
-            var (success, resumesOrMessage, statusCode) = await _resumesHandler.FilterResumeAsync(keywords);
+            var (success, resumesOrMessage, statusCode) = await _resumesHandler.FilterResumeAsync(keywords, token);
 
             if (!success)
             {
-                TempData["ErrorMessage"] = "Failed to filter resumes.";
-                return View();
+                return StatusCode(statusCode, new { message = resumesOrMessage });
             }
 
             if (resumesOrMessage is List<UserInfo> filteredResumes)
             {
-                return View("Index", filteredResumes);
+                return Ok(filteredResumes);
             }
 
-            TempData["ErrorMessage"] = "Failed to filter resumes.";
-            return View();
+            return StatusCode(statusCode, new { message = "Failed to filter resumes." });
         }
     }
 }

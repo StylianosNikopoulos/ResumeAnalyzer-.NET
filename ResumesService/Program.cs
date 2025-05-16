@@ -13,7 +13,6 @@ builder.Configuration.AddJsonFile(configPath, optional: false, reloadOnChange: t
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings.GetValue<string>("SecretKey");
 
-
 builder.Services.AddDbContext<UserServiceDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("ApplyConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ApplyConnection"))));
@@ -21,22 +20,32 @@ builder.Services.AddDbContext<UserServiceDbContext>(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = false; 
+        options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,       
-            ValidateAudience = false,    
-            ValidateLifetime = true,      
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
         };
     });
 
+// Add CORS policy here
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-builder.Services.AddDbContext<UserServiceDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("ApplyConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("ApplyConnection"))));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:7007")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
 
 builder.Services.AddAuthorization();
 
@@ -55,8 +64,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();  
+
+// Use CORS before authentication & authorization
+app.UseCors(MyAllowSpecificOrigins);
+
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

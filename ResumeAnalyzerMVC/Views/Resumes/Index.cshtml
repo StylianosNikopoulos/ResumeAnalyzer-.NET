@@ -3,14 +3,12 @@
 @{
     ViewData["Title"] = "HR Dashboard";
 }
-
 <h2>Analyze And Download Resumes</h2>
 
-<form method="post"  class="resume-filter-form">
+<form class="resume-filter-form">
     <div class="input-container">
         <input type="text" id="keywordInput" placeholder="Enter skills, e.g., .NET, SQL, Java" required />
     </div>
-    <div id="keywordsContainer"></div>
     <div class="button-container">
         <button type="button" onclick="submitKeywords()" class="btn-primary">Analyze Resumes</button>
     </div>
@@ -51,112 +49,112 @@
 
 <script src="~/js/resumes.js"></script>
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #F3F4F6;
-            margin: 0;
-            padding: 0;
-            color: #1E293B;
-        }
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #F3F4F6;
+        margin: 0;
+        padding: 0;
+        color: #1E293B;
+    }
 
-        .resume-filter-form {
-            max-width: 500px;
-            margin: 2rem auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            align-items: center;
-        }
+    .resume-filter-form {
+        max-width: 500px;
+        margin: 2rem auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
 
-        .input-container {
+    .input-container {
+        width: 100%;
+        padding: 1rem;
+        background-color: #FFFFFF;
+        border-radius: 8px;
+        border: 1px solid #DDD;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+    }
+
+        .input-container input {
             width: 100%;
-            padding: 1rem;
-            background-color: #FFFFFF;
+            padding: 0.75rem;
+            border: none;
+            font-size: 1rem;
+            background-color: transparent;
+            color: #333;
+            outline: none;
+        }
+
+            .input-container input:focus {
+                border-color: #4F46E5;
+                box-shadow: 0 0 5px rgba(79, 70, 229, 0.2);
+            }
+
+    .button-container {
+        width: 100%;
+    }
+
+        .button-container button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: #4F46E5;
+            color: #FFFFFF;
+            border: none;
             border-radius: 8px;
-            border: 1px solid #DDD;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-            .input-container input {
-                width: 100%;
-                padding: 0.75rem;
-                border: none;
-                font-size: 1rem;
-                background-color: transparent;
-                color: #333;
-                outline: none;
+            .button-container button:hover {
+                background-color: #4338CA;
             }
 
-                .input-container input:focus {
-                    border-color: #4F46E5;
-                    box-shadow: 0 0 5px rgba(79, 70, 229, 0.2);
-                }
+    /* Table Style */
+    .resume-table-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        background: #FFFFFF;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
 
-        .button-container {
-            width: 100%;
+    .resume-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #FFFFFF;
+        table-layout: fixed;
+    }
+
+        .resume-table thead {
+            background-color: #4F46E5;
+            color: #FFFFFF;
+            text-align: left;
         }
 
-            .button-container button {
-                width: 100%;
-                padding: 0.75rem 1rem;
-                background-color: #4F46E5;
-                color: #FFFFFF;
-                border: none;
-                border-radius: 8px;
-                font-weight: bold;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-
-                .button-container button:hover {
-                    background-color: #4338CA;
-                }
-
-        /* Table Style */
-        .resume-table-container {
-            max-width: 900px;
-            margin: 2rem auto;
-            background: #FFFFFF;
+        .resume-table th,
+        .resume-table td {
             padding: 1rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
+            border-bottom: 1px solid #E5E7EB;
+            font-size: 1rem;
         }
 
-        .resume-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #FFFFFF;
-            table-layout: fixed;
+        .resume-table tbody tr:hover {
+            background-color: #F3F4F6;
         }
 
-            .resume-table thead {
-                background-color: #4F46E5;
-                color: #FFFFFF;
-                text-align: left;
-            }
+    .download-link {
+        color: #4F46E5;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
 
-            .resume-table th,
-            .resume-table td {
-                padding: 1rem;
-                border-bottom: 1px solid #E5E7EB;
-                font-size: 1rem;
-            }
-
-            .resume-table tbody tr:hover {
-                background-color: #F3F4F6;
-            }
-
-        .download-link {
-            color: #4F46E5;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
+        .download-link:hover {
+            color: #4338CA;
         }
-
-            .download-link:hover {
-                color: #4338CA;
-            }
-    </style>
+</style>

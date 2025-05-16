@@ -6,6 +6,7 @@ using ResumesService.Handlers;
 
 namespace ResumesService.Controllers
 {
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/resumes")]
     [ApiController]
     public class ResumesController : Controller

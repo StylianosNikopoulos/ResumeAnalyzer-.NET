@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ResumeAnalyzerMVC.Controllers
 {
-    public class ContactFormController : Controller
+    public class ContactFormController : BaseController
     {
         public IActionResult Index()
         {
@@ -18,4 +18,3 @@ namespace ResumeAnalyzerMVC.Controllers
         }
     }
 }
-
