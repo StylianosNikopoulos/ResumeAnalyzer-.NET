@@ -19,7 +19,8 @@ namespace ResumeAnalyzerMVC.Handlers
             _resumesService = configuration["ApiUrls:RESUME_SERVICE_URL"] ?? throw new ArgumentNullException("ApiUrls:RESUME_SERVICE_URL is missing.");
         }
 
-        // Get resumes 
+
+        // Get all resumes 
         public async Task<(bool success, object resumesOrMessage, int statusCode)> ShowResumesAsync(string token)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"{_resumesService}/resumes");
@@ -30,6 +31,7 @@ namespace ResumeAnalyzerMVC.Handlers
 
             return await HandleApiResponseForResumes<List<UserInfo>>(response);
         }
+
 
         public async Task<(bool success, object resumesOrMessage, int statusCode)> FilterResumeAsync(List<string> keywords, string token)
         {
@@ -47,6 +49,7 @@ namespace ResumeAnalyzerMVC.Handlers
 
             return await HandleApiResponse<List<UserInfo>>(response);
         }
+
 
         public async Task<(bool success, byte[] fileBytes, string fileName, int statusCode)> DownloadResumeAsync(int id, string token)
         {
@@ -68,8 +71,6 @@ namespace ResumeAnalyzerMVC.Handlers
                 return (false, null, errorMessage, (int)response.StatusCode);
             }
         }
-
-
 
 
         //Helper for ShowResumesAsync

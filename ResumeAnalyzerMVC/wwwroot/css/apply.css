@@ -1,0 +1,108 @@
+﻿body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #F3F4F6;
+    margin: 0;
+    padding: 0;
+    color: #1E293B;
+}
+
+.apply {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 1rem;
+}
+
+#apply h2 {
+    font-size: 2rem;
+    text-align: center;
+    color: #4F46E5;
+    margin-bottom: 1.5rem;
+}
+
+#apply .apply-form {
+    background-color: #FFFFFF;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#apply .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+    #apply .form-group label {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #333;
+    }
+
+#apply .apply-form input,
+#apply .apply-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #F9FAFB;
+    transition: border 0.3s ease;
+    resize: none;
+}
+
+    #apply .apply-form input:focus,
+    #apply .apply-form textarea:focus {
+        border-color: #4F46E5;
+        outline: none;
+        box-shadow: 0 0 10px rgba(79, 70, 229, 0.15);
+    }
+
+#apply .file-input {
+    background-color: #F3F4F6;
+    padding: 0.75rem;
+    border: 1px dashed #CBD5E1;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    max-width: 400px;
+}
+
+    #apply .file-input:hover {
+        background-color: #E2E8F0;
+    }
+
+    #apply .file-input input {
+        display: none;
+    }
+
+    #apply .file-input label {
+        cursor: pointer;
+        color: #4F46E5;
+        font-weight: 500;
+    }
+
+#apply .apply-form button {
+    background-color: #4F46E5;
+    color: #FFFFFF;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+    #apply .apply-form button:hover {
+        background-color: #4338CA;
+    }
