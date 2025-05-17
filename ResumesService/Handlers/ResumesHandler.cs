@@ -2,7 +2,7 @@
 using System.Text;
 using UserService.Models;
 using Microsoft.EntityFrameworkCore;
-using ResumesService.Responces;
+using ResumesService.Responses;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
 

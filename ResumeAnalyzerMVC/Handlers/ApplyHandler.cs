@@ -3,7 +3,7 @@ using NuGet.Common;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using ResumeAnalyzerMVC.Requests;
-using ResumeAnalyzerMVC.Responces;
+using ResumeAnalyzerMVC.Responses;
 
 namespace ResumeAnalyzerMVC.Handlers
 {

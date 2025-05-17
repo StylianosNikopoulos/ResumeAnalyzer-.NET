@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using ResumeAnalyzerMVC.Requests;
-using ResumeAnalyzerMVC.Responces;
+using ResumeAnalyzerMVC.Responses;
 
 namespace ResumeAnalyzerMVC.Handlers
 {

@@ -27,12 +27,12 @@
   <ItemGroup>
     <None Remove="Controllers\" />
     <None Remove="Handlers\" />
-    <None Remove="Responces\" />
+    <None Remove="Responses\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Handlers\" />
-    <Folder Include="Responces\" />
+    <Folder Include="Responses\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AuthService\AuthService.csproj">

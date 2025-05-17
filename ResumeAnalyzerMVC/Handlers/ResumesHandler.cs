@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using UserService.Models;
-using ResumeAnalyzerMVC.Responces;
+using ResumeAnalyzerMVC.Responses;
 
 namespace ResumeAnalyzerMVC.Handlers
 {

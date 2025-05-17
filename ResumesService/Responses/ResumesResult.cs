@@ -1,7 +1,7 @@
 ﻿using System;
 using UserService.Models;
 
-namespace ResumesService.Responces
+namespace ResumesService.Responses
 {
 	public class ResumesResult
 	{

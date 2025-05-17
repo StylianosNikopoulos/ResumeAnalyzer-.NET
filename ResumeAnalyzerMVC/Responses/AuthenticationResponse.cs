@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ResumeAnalyzerMVC.Responces
+namespace ResumeAnalyzerMVC.Responses
 {
     public class AuthenticationResponse
     {
