@@ -1,5 +1,5 @@
 using System;
-using AuthService.AuthRequest;
+using AuthService.Request;
 using Microsoft.AspNetCore.Mvc;
 using AuthService.Handlers;
 

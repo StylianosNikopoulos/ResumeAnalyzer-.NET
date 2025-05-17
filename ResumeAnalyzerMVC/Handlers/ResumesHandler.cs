@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using UserService.Models;
 using ResumeAnalyzerMVC.Responces;
@@ -88,7 +87,7 @@ namespace ResumeAnalyzerMVC.Handlers
                         PropertyNameCaseInsensitive = true
                     };
 
-                    var apiResponse = JsonSerializer.Deserialize<ApiResponseForResumes<T>>(responseData, options);
+                    var apiResponse = JsonSerializer.Deserialize<ResumeResponse<T>>(responseData, options);
 
                     if (apiResponse != null && apiResponse.Resumes != null)
                     {
@@ -129,7 +128,7 @@ namespace ResumeAnalyzerMVC.Handlers
                         return (true, plainList, statusCode);
                     }
 
-                    var apiResponse = JsonSerializer.Deserialize<ApiResponseForFilterMethod<T>>(responseData, options);
+                    var apiResponse = JsonSerializer.Deserialize<ResumeResponse<T>>(responseData, options);
                     if (apiResponse != null && apiResponse.Data != null)
                     {
                         return (true, apiResponse.Data, statusCode);

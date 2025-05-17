@@ -1,7 +1,7 @@
 ﻿using System;
 using AuthService.Enum;
 
-namespace AuthService.AuthRequest
+namespace AuthService.Request
 {
     public class UserRegisterRequest
     {

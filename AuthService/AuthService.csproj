@@ -31,15 +31,15 @@
     <None Remove="Controllers\" />
     <None Remove="Enum\" />
     <None Remove="Handlers\" />
-    <None Remove="AuthResponses\" />
-    <None Remove="AuthRequests\" />
+    <None Remove="Requests\" />
+    <None Remove="Responses\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Enum\" />
     <Folder Include="Handlers\" />
-    <Folder Include="AuthResponses\" />
-    <Folder Include="AuthRequests\" />
+    <Folder Include="Requests\" />
+    <Folder Include="Responses\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="appsettings.Development.json" />

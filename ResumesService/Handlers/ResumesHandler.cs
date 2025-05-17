@@ -31,6 +31,7 @@ namespace ResumesService.Handlers
             };
         }
 
+
         public async Task<string?> GetResumePathByUserId(int userId)
         {
             var user = await _usercontext.UserInfos.FindAsync(userId);
@@ -46,6 +47,7 @@ namespace ResumesService.Handlers
 
             return System.IO.File.Exists(fullPath) ? fullPath : null;
         }
+
 
         public async Task<List<UserInfo>> FilterResumesByKeywordsAsync(List<string> keywords)
         {
@@ -69,6 +71,7 @@ namespace ResumesService.Handlers
             }
             return filteredResumes;
         }
+
 
         // Helper Method
         private string ExtractTextFromPdf(string pdfPath)

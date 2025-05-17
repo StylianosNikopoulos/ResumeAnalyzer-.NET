@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using ResumeAnalyzerMVC.Handlers;
+using ResumeAnalyzerMVC.Requests;
 
 namespace ResumeAnalyzerMVC.Controllers
 {
@@ -26,7 +27,7 @@ namespace ResumeAnalyzerMVC.Controllers
         }
 
 		[HttpPost]
-        public async Task<IActionResult> UploadResume(string name, string email, IFormFile file)
+        public async Task<IActionResult> UploadResume(UploadResumeRequest uploadRequest)
         {
             var token = HttpContext.Session.GetString("UserToken");
             if (string.IsNullOrEmpty(token))
@@ -34,20 +35,21 @@ namespace ResumeAnalyzerMVC.Controllers
                 return RedirectToAction("Login", "Authentication"); 
             }
 
-            if (file == null || file.Length == 0)
+            if (uploadRequest.File == null || uploadRequest.File.Length == 0)
             {
-                ViewData["ErrorMessage"] = "No file selected.";
-                return View("Index");
+                TempData["ErrorMessage"] = "No file selected.";
+                return RedirectToAction("Index");
             }
 
-            var (success, message, statusCode) = await _applyHandler.ApplyAsync(name, email, file);
+            var response = await _applyHandler.ApplyAsync(uploadRequest);
 
-            if (!success)
+            if (!response.Success)
             {
-                ViewData["ErrorMessage"] = "An error occurred while uploading the resume.";
-                return View("Index");
+                TempData["ErrorMessage"] = response.Message;
+                return RedirectToAction("Index");
             }
 
+            TempData["SuccessMessage"] = "Your resume was uploaded successfully.";
             return RedirectToAction("Index", "Home");
         }
     }

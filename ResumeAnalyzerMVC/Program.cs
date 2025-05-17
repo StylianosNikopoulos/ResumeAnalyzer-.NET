@@ -37,7 +37,8 @@ builder.Services.AddSession();
 
 builder.Services.AddHttpClient<AuthenticationHandler>();
 builder.Services.AddHttpClient<ApplyHandler>();
-builder.Services.AddHttpClient<ResumesHandler>(); 
+builder.Services.AddHttpClient<ResumesHandler>();
+builder.Services.AddHttpClient<ContactFormHandler>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();

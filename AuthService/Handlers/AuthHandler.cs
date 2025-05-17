@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AuthService.AuthRequest;
+using AuthService.Request;
 using AuthService.Enum;
 using AuthService.Models;
 using Microsoft.EntityFrameworkCore;

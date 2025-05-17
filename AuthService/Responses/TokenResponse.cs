@@ -1,5 +1,5 @@
 ﻿using System;
-namespace AuthService.AuthRequest
+namespace AuthService.Request
 {
     public class TokenResponse
     {

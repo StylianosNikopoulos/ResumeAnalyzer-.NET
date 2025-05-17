@@ -2,6 +2,8 @@
 using NuGet.Common;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
+using ResumeAnalyzerMVC.Requests;
+using ResumeAnalyzerMVC.Responces;
 
 namespace ResumeAnalyzerMVC.Handlers
 {
@@ -18,43 +20,56 @@ namespace ResumeAnalyzerMVC.Handlers
             _applyServiceUrl = configuration["ApiUrls:APPLY_SERVICE_URL"] ?? throw new ArgumentNullException("ApiUrls:APPLY_SERVICE_URL is missing.");
         }
 
-        public async Task<(bool success, string message, int statusCode)> ApplyAsync(string name, string email, IFormFile file)
+        public async Task<ApiResponse<string>> ApplyAsync(UploadResumeRequest uploadRequest)
         {
             using (var formData = new MultipartFormDataContent())
             {
-                formData.Add(new StringContent(name), "name");
-                formData.Add(new StringContent(email), "email");
+                formData.Add(new StringContent(uploadRequest.Name), "name");
+                formData.Add(new StringContent(uploadRequest.Email), "email");
 
-                if (file != null && file.Length > 0)
+                if (uploadRequest.File != null && uploadRequest.File.Length > 0)
                 {
-                    var fileContent = new StreamContent(file.OpenReadStream());
-                    formData.Add(fileContent, "file", file.FileName);
+                    var fileContent = new StreamContent(uploadRequest.File.OpenReadStream());
+                    formData.Add(fileContent, "file", uploadRequest.File.FileName);
                 }
 
                 var token = _httpContextAccessor.HttpContext?.Session?.GetString("UserToken");
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, $"{_applyServiceUrl}/resume")
+                {
+                    Content = formData
+                };
+
                 if (!string.IsNullOrEmpty(token))
                 {
-                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    requestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 }
 
-                var response = await _httpClient.PostAsync($"{_applyServiceUrl}/resume", formData);
+                var response = await _httpClient.SendAsync(requestMessage);
                 return await ParseResponse(response);
             }
         }
 
-
-        private async Task<(bool success, string message, int statusCode)> ParseResponse(HttpResponseMessage response)
+        private async Task<ApiResponse<string>> ParseResponse(HttpResponseMessage response)
         {
             int statusCode = (int)response.StatusCode;
+            string responseContent = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
             {
-                string errorResponseContent = await response.Content.ReadAsStringAsync();
-                return (false, $"Failed to apply, status: {response.StatusCode} - {errorResponseContent}", statusCode);
+                return new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = $"Failed to apply, status: {statusCode} - {responseContent}",
+                    Data = null
+                };
             }
 
-            string successResponseContent = await response.Content.ReadAsStringAsync();
-            return (true, successResponseContent, statusCode);
+            return new ApiResponse<string>
+            {
+                Success = true,
+                Message = "Resume uploaded successfully.",
+                Data = responseContent
+            };
         }
     }
 }

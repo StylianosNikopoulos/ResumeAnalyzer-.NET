@@ -1,6 +1,9 @@
 using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ResumeAnalyzerMVC.Handlers;
+using ResumeAnalyzerMVC.Requests;
+
 namespace ResumeAnalyzerMVC.Controllers
 {
     public class AuthenticationController : BaseController
@@ -24,36 +27,36 @@ namespace ResumeAnalyzerMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(string name, string email, string password, string confirmPassword)
+        public async Task<IActionResult> Register(RegisterRequest registerRequest)
         {
-            if (password != confirmPassword)
+            if (registerRequest.Password != registerRequest.ConfirmPassword)
             {
                 ViewData["ErrorMessage"] = "Passwords do not match!";
                 return View();
             }
 
-            var (success,token, message) = await _authHandler.RegisterAsync(name, email, password);
-            if (!success)
+            var response = await _authHandler.RegisterAsync(registerRequest);
+            if (!response.Success)
             {
                 ViewData["ErrorMessage"] = "Some error occured";
                 return View();
             }
-            HttpContext.Session.SetString("UserToken", token);
+            HttpContext.Session.SetString("UserToken", response.Token);
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
-            var (success, token, message) = await _authHandler.LoginAsync(email, password);
+            var response = await _authHandler.LoginAsync(loginRequest);
 
-            if (!success)
+            if (!response.Success)
             {
                 ViewData["ErrorMessage"] = "Wrong Credentials";
                 return View("Login");
             }
 
-            HttpContext.Session.SetString("UserToken", token);
+            HttpContext.Session.SetString("UserToken", response.Token);
             return RedirectToAction("Index", "Home");
         }
 

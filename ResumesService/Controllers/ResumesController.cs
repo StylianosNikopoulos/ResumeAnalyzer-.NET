@@ -18,6 +18,7 @@ namespace ResumesService.Controllers
             _resumeFilterHandler = resumeFilterHandler;
         }
 
+
         [HttpGet("resumes")]
         public async Task<IActionResult> GetResumes()
         {
@@ -34,6 +35,7 @@ namespace ResumesService.Controllers
 
             return Ok(new { message = result.Message, resumes = result.UserInfos });
         }
+
 
         [HttpGet("download-resume/{userId}")]
         public async Task<IActionResult> DownloadResume(int UserId)
@@ -53,6 +55,7 @@ namespace ResumesService.Controllers
             var fileName = Path.GetFileName(resumePath);
             return File(fileBytes, "application/pdf", fileName);
         }
+
 
         [HttpPost("filter")]
         public async Task<IActionResult> FilterResumes([FromBody] List<string> keywords)
