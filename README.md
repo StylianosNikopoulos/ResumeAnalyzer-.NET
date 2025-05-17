@@ -1,35 +1,30 @@
 # 📌 ResumeAnalyzer
 
 ## 🚀 Project Overview
-- 🖧 **Microservices Architecture:**
-  
-**ResumeAnalyzer** is a web application that streamlines resume submission and analysis for job seekers and HR professionals. It demonstrates best practices in authentication, authorization, and secure API design using **ASP.NET Core MVC**.
-
+**ResumeAnalyzer** is a microservices-based web application designed to streamline resume submission and analysis for job seekers and HR professionals. It follows best practices for authentication, authorization, and secure API design using **ASP.NET Core MVC**.
 
 ---
 
-## 🌟 Features
-
+## 🌟 Key Features
 - ✅ **User Registration and Login:** Secure authentication with JWT.
 - ✅ **Role-Based Authorization:** Access control (HR and User roles).
-- ✅ **Resume Upload:** Securely upload resumes (e.g., PDF, DOCX).
-- ✅ **Resume Dashboard:** HR users can view and manage submitted resumes.
-- ✅ **Secure API Services:** Separate AuthService, ApplyService and  ResumesService with JWT protection.
-- ✅ **Session Management:** Secure user sessions with JWT and session storage.
+- ✅ **Resume Upload:** Securely upload resumes (PDF, DOCX).
+- ✅ **Resume Management:** HR users can view, filter, and download resumes.
+- ✅ **Microservices Architecture:** Separate AuthService, ApplyService, EmailService, and ResumesService with JWT protection.
+- ✅ **Secure Session Management:** User sessions secured with JWT.
 
 ---
 
-## 🚦 Architecture
-
+## 🚦 System Architecture
 - 🔐 **AuthService:** Manages user authentication and JWT token generation.  
 - 📥 **ApplyService:** Handles resume uploads and user applications.  
-- 📊 **ResumesService:** Allows HR to download, filter by keywords, and manage resumes efficiently.  
-- 🌐 **ResumeAnalyzerMVC:** User-facing front-end for interacting with the application.
+- 📊 **ResumesService:** Manages resume viewing, filtering, and downloading for HR.  
+- 📧 **EmailService:** Sends email notifications (e.g., confirmation emails).  
+- 🌐 **ResumeAnalyzerMVC:** Front-end interface for user interactions.
 
 ---
 
 ## ⚙️ Tech Stack
-
 - **Frontend:** ASP.NET Core MVC, Razor Views, CSS  
 - **Backend:** ASP.NET Core Web API, Entity Framework Core, C#  
 - **Database:** MySQL  
@@ -39,17 +34,14 @@
 
 ---
 
-## 🚀 Feature Improvements
-
-- 🎨 **Modern UI Design:** Upgrade the UI with a clean, responsive design 
-- 🛡️ **Admin Panel:** Add an admin dashboard where admins can manage users, delete accounts, and promote users to HR role.  
+## 🚀 Planned Feature Improvements
+- 🎨 **UI/UX Enhancements:** Modern, responsive design for a better user experience.  
+- 🛡️ **Admin Panel:** Add an admin dashboard for user management and role management.  
 
 ---
 
 ## 🔒 Security Measures
-
-- 🛡️ **JWT Authentication:** Secure login and registration using JSON Web Tokens.
-- 🛑 **Role-Based Access Control:** Only HR users can access the resume dashboard.
-- 🔑 **Secure Password Storage:** Passwords are hashed using BCrypt.
-- 🛡️ **Session Management:** User session is managed securely with JWT and session variables.
-
+- 🛡️ **JWT Authentication:** Secure login and registration using JSON Web Tokens.  
+- 🛑 **Role-Based Access Control:** Restrict access to resume dashboard (HR only).  
+- 🔑 **Secure Password Storage:** Passwords hashed using BCrypt.  
+- 🔒 **Session Management:** Secure user sessions with JWT and session storage.  
