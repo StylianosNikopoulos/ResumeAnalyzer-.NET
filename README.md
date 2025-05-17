@@ -41,7 +41,6 @@
 
 ## 🚀 Feature Improvements
 
-- 📧 **Contact Form:** Implement a fully functional contact form for user inquiries and support requests.  
 - 🎨 **Modern UI Design:** Upgrade the UI with a clean, responsive design 
 - 🛡️ **Admin Panel:** Add an admin dashboard where admins can manage users, delete accounts, and promote users to HR role.  
 
