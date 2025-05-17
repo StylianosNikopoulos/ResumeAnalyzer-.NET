@@ -5,10 +5,20 @@
     <div class="login-container">
         <h2>Login</h2>
 
-        @if (ViewData["ErrorMessage"] != null)
+        @if (TempData["SuccessMessage"] != null)
         {
-            <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
+            <div class="tempAlert alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
         }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="tempAlert alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
         <div class="login-container">
             <form method="post" asp-action="Login" asp-controller="Authentication">
                 <div class="form-group">

@@ -19,10 +19,12 @@
     <None Remove="Controllers\" />
     <None Remove="Handlers\" />
     <None Remove="Requests\" />
+    <None Remove="Responses\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Handlers\" />
     <Folder Include="Requests\" />
+    <Folder Include="Responses\" />
   </ItemGroup>
 </Project>

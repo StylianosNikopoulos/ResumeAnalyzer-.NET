@@ -33,12 +33,8 @@ namespace ResumeAnalyzerMVC.Controllers
 
             if (!response.Success)
             {
-                TempData["ErrorMessage"] = response.Message;
+                TempData["ErrorMessage"] = "Sorry, we couldn't send your message at this time. Please try again later.";
                 return View("Index", contactRequest);
-            }
-            else
-            {
-                TempData["SuccessMessage"] = "Your message has been sent successfully.";
             }
 
             TempData["SuccessMessage"] = "Your message has been sent successfully.";

@@ -32,12 +32,13 @@ namespace ResumeAnalyzerMVC.Controllers
             var token = HttpContext.Session.GetString("UserToken");
             if (string.IsNullOrEmpty(token))
             {
+                TempData["ErrorMessage"] = "Please login to upload your resume.";
                 return RedirectToAction("Login", "Authentication"); 
             }
 
             if (uploadRequest.File == null || uploadRequest.File.Length == 0)
             {
-                TempData["ErrorMessage"] = "No file selected.";
+                TempData["ErrorMessage"] = "Please select a resume file before uploading.";
                 return RedirectToAction("Index");
             }
 
@@ -45,12 +46,12 @@ namespace ResumeAnalyzerMVC.Controllers
 
             if (!response.Success)
             {
-                TempData["ErrorMessage"] = response.Message;
+                TempData["ErrorMessage"] = $"Upload failed";
                 return RedirectToAction("Index");
             }
 
-            TempData["SuccessMessage"] = "Your resume was uploaded successfully.";
-            return RedirectToAction("Index", "Home");
+            TempData["SuccessMessage"] = "Your resume has been uploaded successfully. Thank you!";
+            return RedirectToAction("Index");
         }
     }
 }

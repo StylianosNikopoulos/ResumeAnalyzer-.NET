@@ -42,8 +42,9 @@ namespace EmailService.Handlers
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return false;
             }
         }

@@ -14,11 +14,11 @@ namespace UserService.Handlers
 			_hostEnvironment = hostEnvironment;
 		}
 
-		public async Task<UploadResumeResult> HandleAsync(IFormFile file, string name, string email)
+		public async Task<UserResponse> HandleAsync(IFormFile file, string name, string email)
 		{
             if (file == null || file.Length == 0)
             {
-                return new UploadResumeResult { Success = false, Message = "Invalid file" };
+                return new UserResponse { Success = false, Message = "Invalid file" };
             }
 
             var filePath = Path.Combine(_hostEnvironment.ContentRootPath, "Resumes", $"{Guid.NewGuid()}_{file.FileName}");
@@ -40,7 +40,7 @@ namespace UserService.Handlers
             _context.UserInfos.Add(newUserInfo);
             await _context.SaveChangesAsync();
 
-            return new UploadResumeResult
+            return new UserResponse
             {
                 Success = true,
                 Message = "Resume uploaded successfully",

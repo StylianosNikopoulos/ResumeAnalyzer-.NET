@@ -28,12 +28,12 @@ namespace ResumesService.Controllers
                 return Unauthorized(new { message = "Token is required." });
             }
 
-            var result = await _resumeFilterHandler.HandleResumesAsync();
+            var responce = await _resumeFilterHandler.HandleResumesAsync();
 
-            if (!result.Success)
-                return BadRequest(result.Message);
+            if (!responce.Success)
+                return BadRequest(responce.Message);
 
-            return Ok(new { message = result.Message, resumes = result.UserInfos });
+            return Ok(new { message = responce.Message, resumes = responce.UserInfos });
         }
 
 

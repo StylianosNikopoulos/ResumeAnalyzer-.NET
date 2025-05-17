@@ -5,16 +5,21 @@
 }
 <link rel="stylesheet" href="~/css/contactForm.css">
 
+<h2>Contact Us</h2>
+
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-}
-else if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    <div class="tempAlert alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
 }
 
-<h2>Contact Us</h2>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="tempAlert alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
 
 <section id="contact" class="contact">
     <form asp-controller="ContactForm" asp-action="SendForm" method="post" class="contact-form">

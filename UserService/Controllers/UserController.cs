@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using UserService.Handlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using UserService.Requests;
 
 namespace UserService.Controllers
 {
@@ -19,7 +20,7 @@ namespace UserService.Controllers
         }
 
         [HttpPost("resume")]
-        public async Task<IActionResult> UploadResume([FromForm] IFormFile file, [FromForm] string name, [FromForm] string email)
+        public async Task<IActionResult> UploadResume([FromForm] UserRequest request)
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
@@ -28,14 +29,19 @@ namespace UserService.Controllers
                 return Unauthorized(new { message = "Token is required." });
             }
 
-            var result = await _resumeUploadHandler.HandleAsync(file, name, email);
-
-            if (!result.Success)
+            if (request.File == null)
             {
-                return BadRequest(result.Message);
+                return BadRequest(new { message = "File is required." });
             }
 
-            return Ok(new { message = result.Message, userId = result.UserId });
+            var response = await _resumeUploadHandler.HandleAsync(request.File, request.Name, request.Email);
+
+            if (!response.Success)
+            {
+                return BadRequest(new { message = response.Message });
+            }
+
+            return Ok(new { message = response.Message, userId = response.UserId });
         }
     }
 }

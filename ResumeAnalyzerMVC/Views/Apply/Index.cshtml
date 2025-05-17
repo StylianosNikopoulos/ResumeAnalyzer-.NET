@@ -6,6 +6,20 @@
 
 <h2>Upload Your Resume</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="tempAlert alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="tempAlert alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <section id="apply" class="apply">
     <form method="post" asp-action="UploadResume" asp-controller="Apply" enctype="multipart/form-data" class="apply-form">
         <div class="form-group">

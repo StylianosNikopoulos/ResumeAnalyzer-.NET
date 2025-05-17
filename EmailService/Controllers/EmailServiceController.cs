@@ -1,6 +1,7 @@
 ﻿using System;
 using EmailService.Handlers;
 using EmailService.Requests;
+using EmailService.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmailService.Controllers
@@ -20,18 +21,18 @@ namespace EmailService.Controllers
         [HttpPost("send")]
         public async Task<IActionResult> SendEmail([FromBody] EmailRequest emailRequest)
         {
-            if(string.IsNullOrEmpty(emailRequest.To) || string.IsNullOrEmpty(emailRequest.Body))
-            {
-                return BadRequest("Recipient and body cannot be empty.");
-            }
+            if (emailRequest == null)
+                return BadRequest(new EmailResponse<object>(400, "Request body cannot be null."));
+
+            if (string.IsNullOrEmpty(emailRequest.To) || string.IsNullOrEmpty(emailRequest.Body))
+                return BadRequest(new EmailResponse<object>(400, "Recipient and body are required."));
 
             var success = await _emailServiceHandler.SendEmailAsync(emailRequest);
 
             if (success)
-                return Ok(new { message = "Email sent successfully." });
+                return Ok(new EmailResponse<object>(200, "Email sent successfully."));
 
-            return StatusCode(500, new { message = "Failed to send email." });
-
+            return StatusCode(500, new EmailResponse<object>(500, "Failed to send email."));
         }
     }
 }

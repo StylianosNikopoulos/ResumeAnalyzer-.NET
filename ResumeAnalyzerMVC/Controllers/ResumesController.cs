@@ -31,11 +31,12 @@ namespace ResumeAnalyzerMVC.Controllers
 
                 if (!success)
                 {
-                    TempData["ErrorMessage"] = "Failed to filter resumes.";
+                    TempData["ErrorMessage"] = "Sorry, we couldn't filter the resumes right now. Please try again later.";
                     return View(new List<UserInfo>());
                 }
 
                 resumes = resumesOrMessage as List<UserInfo> ?? new List<UserInfo>();
+                TempData["SuccessMessage"] = $"Found {resumes.Count} resumes matching your keywords.";
             }
             else
             {
@@ -43,13 +44,13 @@ namespace ResumeAnalyzerMVC.Controllers
 
                 if (!success)
                 {
-                    TempData["ErrorMessage"] = "Failed to load resumes.";
+                    TempData["ErrorMessage"] = "Sorry, we couldn't load the resumes. Please refresh the page.";
                     return View(new List<UserInfo>());
                 }
 
                 resumes = resumesOrMessage as List<UserInfo> ?? new List<UserInfo>();
+                TempData["SuccessMessage"] = $"Loaded {resumes.Count} resumes.";
             }
-
             return View(resumes);
         }
 
@@ -64,7 +65,7 @@ namespace ResumeAnalyzerMVC.Controllers
 
             if (!success)
             {
-                TempData["ErrorMessage"] = "Failed to download resume.";
+                TempData["ErrorMessage"] = "Sorry, we couldn't download the resume. Please try again.";
                 return View();
             }
 

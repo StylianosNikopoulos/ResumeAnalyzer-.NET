@@ -236,3 +236,22 @@ input[type="email"], input[type="password"], button[type="submit"], input[type="
     }
 }
 
+.alert {
+    padding: 10px 20px; /* smaller padding */
+    margin: 20px auto; /* auto left/right margin centers the box */
+    border-radius: 10px;
+    max-width: 400px; /* restrict width */
+    text-align: center; /* center text inside */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* subtle shadow */
+    font-weight: 600;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}

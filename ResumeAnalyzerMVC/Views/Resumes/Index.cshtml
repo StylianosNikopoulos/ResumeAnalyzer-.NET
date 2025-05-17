@@ -9,6 +9,20 @@
 
 <h2>Analyze And Download Resumes</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="tempAlert alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="tempAlert alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <form class="resume-filter-form">
     <div class="input-container">
         <input type="text" id="keywordInput" placeholder="Enter skills, e.g., .NET, SQL, Java" required />

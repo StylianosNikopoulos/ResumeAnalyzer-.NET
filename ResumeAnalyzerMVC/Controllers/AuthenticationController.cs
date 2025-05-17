@@ -31,17 +31,19 @@ namespace ResumeAnalyzerMVC.Controllers
         {
             if (registerRequest.Password != registerRequest.ConfirmPassword)
             {
-                ViewData["ErrorMessage"] = "Passwords do not match!";
-                return View();
+                TempData["ErrorMessage"] = "Passwords do not match. Please try again.";
+                return RedirectToAction("Register");
             }
 
             var response = await _authHandler.RegisterAsync(registerRequest);
             if (!response.Success)
             {
-                ViewData["ErrorMessage"] = "Some error occured";
-                return View();
+                TempData["ErrorMessage"] = "Registration failed. Please try again.";
+                return RedirectToAction("Register");
             }
+
             HttpContext.Session.SetString("UserToken", response.Token);
+            TempData["SuccessMessage"] = "Registration successful! You are now logged in.";
             return RedirectToAction("Index", "Home");
         }
 
@@ -52,17 +54,19 @@ namespace ResumeAnalyzerMVC.Controllers
 
             if (!response.Success)
             {
-                ViewData["ErrorMessage"] = "Wrong Credentials";
+                TempData["ErrorMessage"] = "Invalid email or password. Please try again.";
                 return View("Login");
             }
 
             HttpContext.Session.SetString("UserToken", response.Token);
+            TempData["SuccessMessage"] = "Login successful! Welcome back.";
             return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("UserToken");
+            TempData["SuccessMessage"] = "You have successfully logged out.";
             return RedirectToAction("Login");
         }
     }
