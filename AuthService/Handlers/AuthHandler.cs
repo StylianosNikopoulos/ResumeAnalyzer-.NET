@@ -48,7 +48,6 @@ namespace AuthService.Handlers
             await _context.SaveChangesAsync();
 
             var token = GenerateJwtToken(newUser);
-            _httpContextAccessor.HttpContext.Session.SetString("UserToken", token);
 
             return new TokenResponse {
                 Status = 201,
