@@ -45,18 +45,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
+app.UseHttpsRedirection();
 
-if (app.Environment.IsDevelopment())
+
+if (!app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
-}
-else
-{
-    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();

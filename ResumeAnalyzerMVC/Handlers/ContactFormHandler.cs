@@ -21,29 +21,43 @@ namespace ResumeAnalyzerMVC.Handlers
 
         public async Task<ContactFormResponse> SendContactFormAsync(ContactFormRequest contactRequest)
         {
-            var emailRequest = new
+            try
             {
-                To = _configuration["EmailSettings:AdminEmail"],
-                Subject = $"Contact Form Message from {contactRequest.Name}",
-                Body = $"Name: {contactRequest.Name}\nEmail: {contactRequest.Email}\nMessage: {contactRequest.Message}"
-            };
+                var emailRequest = new
+                {
+                    To = _configuration["EmailSettings:AdminEmail"] ?? "[No Admin Email]",
+                    Subject = $"Contact Form Message from {contactRequest.Name ?? "[No Name]"}",
+                    Body = $"Name: {contactRequest.Name ?? "[No Name]"}\nEmail: {contactRequest.Email ?? "[No Email]"}\nMessage: {contactRequest.Message ?? "[No Message]"}"
+                };
 
-            var jsonOptions = new JsonSerializerOptions
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+
+                var jsonContent = JsonSerializer.Serialize(emailRequest, jsonOptions);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync($"{_emailServiceUrl}/send", content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"API Response: {responseContent}");
+
+                return new ContactFormResponse
+                {
+                    Success = response.IsSuccessStatusCode,
+                    Message = response.IsSuccessStatusCode ? "Message sent successfully." : $"Failed to send message: {responseContent}"
+                };
+            }
+            catch(Exception ex)
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
-
-            var jsonContent = JsonSerializer.Serialize(emailRequest, jsonOptions);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync($"{_emailServiceUrl}/api/email/send", content);
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            return new ContactFormResponse
-            {
-                Success = response.IsSuccessStatusCode,
-                Message = response.IsSuccessStatusCode ? "Message sent successfully." : $"Failed to send message: {responseContent}"
-            };
+                Console.WriteLine(ex);
+                return new ContactFormResponse
+                {
+                    Success = false,
+                    Message = $"Exception: {ex.Message}"
+                };
+            }
         }
     }
 }

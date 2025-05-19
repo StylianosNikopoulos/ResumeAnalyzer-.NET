@@ -21,12 +21,12 @@ namespace ResumeAnalyzerMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendForm(ContactFormRequest contactRequest)
+        public async Task<IActionResult> SendForm([FromForm] ContactFormRequest contactRequest)
         {
-            if (!ModelState.IsValid)
+            if (contactRequest == null || !ModelState.IsValid)
             {
                 TempData["ErrorMessage"] = "Please correct the highlighted errors.";
-                return View("Index", contactRequest);
+                return RedirectToAction("Index");
             }
 
             var response = await _contactFormHandler.SendContactFormAsync(contactRequest);
@@ -34,11 +34,13 @@ namespace ResumeAnalyzerMVC.Controllers
             if (!response.Success)
             {
                 TempData["ErrorMessage"] = "Sorry, we couldn't send your message at this time. Please try again later.";
-                return View("Index", contactRequest);
+                return RedirectToAction("Index");
             }
 
             TempData["SuccessMessage"] = "Your message has been sent successfully.";
             return RedirectToAction("Index");
         }
+
+
     }
 }

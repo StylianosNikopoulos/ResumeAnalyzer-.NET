@@ -4,6 +4,7 @@
     ViewData["Title"] = "Contact Form";
 }
 <link rel="stylesheet" href="~/css/contactForm.css">
+<script src="~/js/contact.js"></script>
 
 <h2>Contact Us</h2>
 
@@ -21,19 +22,25 @@
     </div>
 }
 
+
 <section id="contact" class="contact">
-    <form asp-controller="ContactForm" asp-action="SendForm" method="post" class="contact-form">
+    <form asp-action="SendForm" asp-controller="ContactForm" method="post" class="contact-form">
+        @Html.AntiForgeryToken()
         <div class="form-group">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" placeholder="Your Name" required />
+            <label for="Name">Name</label>
+            <input id="Name" name="Name" class="form-control" placeholder="Your Name" required />
+            <span class="text-danger">@Html.ValidationMessageFor(model => model.Name)</span>
 
-            <label asp-for="Email"></label>
-            <input asp-for="Email" class="form-control" placeholder="Your Email" required />
+            <label for="Email">Email</label>
+            <input id="Email" name="Email" type="email" class="form-control" placeholder="Your Email" required />
+            <span class="text-danger">@Html.ValidationMessageFor(model => model.Email)</span>
 
-            <label asp-for="Message"></label>
-            <textarea asp-for="Message" class="form-control" placeholder="Your Message" required></textarea>
+            <label for="Message">Message</label>
+            <textarea id="Message" name="Message" class="form-control" placeholder="Your Message" required></textarea>
+            <span class="text-danger">@Html.ValidationMessageFor(model => model.Message)</span>
         </div>
+
         <button type="submit" class="btn btn-primary">Send Message</button>
     </form>
-
 </section>
+

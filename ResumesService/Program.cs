@@ -20,7 +20,7 @@ builder.Services.AddDbContext<UserServiceDbContext>(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = false;
+        options.RequireHttpsMetadata = true;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -47,6 +47,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseHsts(); 
 }
 
 app.UseHttpsRedirection();
